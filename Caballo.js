@@ -19,9 +19,9 @@ class Caballo extends Ficha {
 
       this.scale.set(0.15,0.15,0.15);
       this.rotation.x = 3*Math.PI/2;
-      this.rotation.z = Math.PI;
+      
       if(color == 0){
-        this.rotation.y = Math.PI;
+        this.rotation.z = 0;
       }
   }
 
