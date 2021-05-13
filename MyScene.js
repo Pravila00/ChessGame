@@ -7,12 +7,13 @@ import { TrackballControls } from '../libs/TrackballControls.js'
 
 // Clases de mi proyecto
 
-import { MyPeon } from './MyPeon.js'
-import { MyTorre } from './MyTorre.js';
-import { MyCaballo } from './MyCaballo.js';
-import { MyAlfil } from './MyAlfil.js';
-import { MyRey } from './MyRey.js';
-import { MyDama } from './MyDama.js';
+import { Peon } from './Peon.js'
+import { Torre } from './Torre.js';
+import { Caballo } from './Caballo.js';
+import { Alfil } from './Alfil.js';
+import { Rey } from './Rey.js';
+import { Dama } from './Dama.js';
+import { Tablero } from './Tablero.js';
 
  
 /// La clase fachada del modelo
@@ -27,39 +28,20 @@ class MyScene extends THREE.Scene {
     // Lo primero, crear el visualizador, pasándole el lienzo sobre el que realizar los renderizados.
     this.renderer = this.createRenderer(myCanvas);
     
-    // Se añade a la gui los controles para manipular los elementos de esta clase
     this.gui = this.createGUI ();
     
-    // Construimos los distinos elementos que tendremos en la escena
-    
-    // Todo elemento que se desee sea tenido en cuenta en el renderizado de la escena debe pertenecer a esta. Bien como hijo de la escena (this en esta clase) o como hijo de un elemento que ya esté en la escena.
-    // Tras crear cada elemento se añadirá a la escena con   this.add(variable)
     this.createLights ();
     
-    // Tendremos una cámara con un control de movimiento con el ratón
     this.createCamera ();
     
-    // Y unos ejes. Imprescindibles para orientarnos sobre dónde están las cosas
     this.axis = new THREE.AxesHelper (5);
     this.add (this.axis);
     
-    // Por último creamos el modelo.
-    // El modelo puede incluir su parte de la interfaz gráfica de usuario. Le pasamos la referencia a 
-    // la gui y el texto bajo el que se agruparán los controles de la interfaz que añada el modelo.
+    this.createGround();
 
-    this.peon = new MyPeon(this.gui, "Controles del Peon",false);
-    this.torre = new MyTorre(this.gui, "Controles de la Torre");
-    this.caballo = new MyCaballo(this.gui, "Controles del Caballo");
-    this.alfil = new MyAlfil(this.gui, "Controles del Alfil");
-    this.rey = new MyRey(this.gui, "Controles del Rey");
-    this.dama = new MyDama(this.gui, "Controles de la Dama");
+    this.tablero = new Tablero(this.gui,'Tablero');
 
-    this.add (this.peon);
-    this.add (this.torre);
-    this.add (this.caballo);
-    this.add (this.alfil);
-    this.add (this.rey);
-    this.add (this.dama);
+    this.add(this.tablero);
   }
   
   createCamera () {
@@ -69,7 +51,7 @@ class MyScene extends THREE.Scene {
     //   Los planos de recorte cercano y lejano
     this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
     // También se indica dónde se coloca
-    this.camera.position.set (20, 10, 20);
+    this.camera.position.set (0, 100, 100);
     // Y hacia dónde mira
     var look = new THREE.Vector3 (0,0,0);
     this.camera.lookAt(look);
@@ -128,6 +110,27 @@ class MyScene extends THREE.Scene {
     this.spotLight.position.set( 60, 60, 40 );
     this.add (this.spotLight);
   }
+
+  createGround () {
+    // El suelo es un Mesh, necesita una geometría y un material.
+    
+    // La geometría es una caja con muy poca altura
+    var geometryGround = new THREE.BoxGeometry (50,0.2,50);
+    
+    // El material se hará con una textura de madera
+    var texture = new THREE.TextureLoader().load('../imgs/textura-ajedrezada.jpg');
+    var materialGround = new THREE.MeshPhongMaterial ({map: texture});
+    
+    // Ya se puede construir el Mesh
+    var ground = new THREE.Mesh (geometryGround, materialGround);
+    
+    // Todas las figuras se crean centradas en el origen.
+    // El suelo lo bajamos la mitad de su altura para que el origen del mundo se quede en su lado superior
+    ground.position.y = -0.1;
+    
+    // Que no se nos olvide añadirlo a la escena, que en este caso es  this
+    this.add (ground);
+  }
   
   createRenderer (myCanvas) {
     // Se recibe el lienzo sobre el que se van a hacer los renderizados. Un div definido en el html.
@@ -182,12 +185,7 @@ class MyScene extends THREE.Scene {
     this.cameraControl.update();
     
     // Se actualiza el resto del modelo
-    this.peon.update();
-    this.torre.update();
-    this.caballo.update();
-    this.alfil.update();
-    this.rey.update();
-    this.dama.update();
+    this.tablero.update()
     
     // Le decimos al renderizador "visualiza la escena que te indico usando la cámara que te estoy pasando"
     this.renderer.render (this, this.getCamera());
