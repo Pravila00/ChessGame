@@ -4,42 +4,37 @@
 import * as THREE from '../libs/three.module.js'
 import { GUI } from '../libs/dat.gui.module.js'
 import { TrackballControls } from '../libs/TrackballControls.js'
-
 // Clases de mi proyecto
-
-import { Peon } from './Peon.js'
-import { Torre } from './Torre.js';
-import { Caballo } from './Caballo.js';
-import { Alfil } from './Alfil.js';
-import { Rey } from './Rey.js';
-import { Dama } from './Dama.js';
 import { Tablero } from './Tablero.js';
 
- 
-/// La clase fachada del modelo
-/**
- * Usaremos una clase derivada de la clase Scene de Three.js para llevar el control de la escena y de todo lo que ocurre en ella.
- */
 
 class MyScene extends THREE.Scene {
   constructor (myCanvas) {
     super();
+
+    this.applicationMode = 'NO_ACTION';  
+
+    this.cameraX = 0;
+    this.cameraZ = 100;
     
     // Lo primero, crear el visualizador, pasándole el lienzo sobre el que realizar los renderizados.
     this.renderer = this.createRenderer(myCanvas);
     
     this.gui = this.createGUI ();
+
+    this.trackballControls = null;
     
     this.createLights ();
     
     this.createCamera ();
     
-    this.axis = new THREE.AxesHelper (5);
-    this.add (this.axis);
-    
     this.createGround();
 
-    this.tablero = new Tablero(this.gui,'Tablero');
+    //Interaccion
+
+    this.mouseDown = false;
+
+    this.tablero = new Tablero(this,300,300);
 
     this.add(this.tablero);
   }
@@ -51,20 +46,21 @@ class MyScene extends THREE.Scene {
     //   Los planos de recorte cercano y lejano
     this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
     // También se indica dónde se coloca
-    this.camera.position.set (0, 100, 100);
+    this.camera.position.set (0, 75, 75);
     // Y hacia dónde mira
     var look = new THREE.Vector3 (0,0,0);
     this.camera.lookAt(look);
-    this.add (this.camera);
     
-    // Para el control de cámara usamos una clase que ya tiene implementado los movimientos de órbita
-    this.cameraControl = new TrackballControls (this.camera, this.renderer.domElement);
-    // Se configuran las velocidades de los movimientos
-    this.cameraControl.rotateSpeed = 5;
-    this.cameraControl.zoomSpeed = -2;
-    this.cameraControl.panSpeed = 0.5;
-    // Debe orbitar con respecto al punto de mira de la cámara
-    this.cameraControl.target = look;
+    
+    this.trackballControls = new TrackballControls (this.camera, this.renderer.domElement);
+    this.trackballControls.rotateSpeed = 5;
+    this.trackballControls.zoomSpeed = -2;
+    this.trackballControls.panSpeed = 0.5;
+    this.trackballControls.target = look;
+    this.trackballControls.enabled = false;
+
+
+    this.add (this.camera);
   }
   
   
@@ -107,7 +103,7 @@ class MyScene extends THREE.Scene {
     // Si no se le da punto de mira, apuntará al (0,0,0) en coordenadas del mundo
     // En este caso se declara como   this.atributo   para que sea un atributo accesible desde otros métodos.
     this.spotLight = new THREE.SpotLight( 0xffffff, this.guiControls.lightIntensity );
-    this.spotLight.position.set( 60, 60, 40 );
+    this.spotLight.position.set( 0, 200, 0 );
     this.add (this.spotLight);
   }
 
@@ -143,17 +139,54 @@ class MyScene extends THREE.Scene {
     
     // Se establece el tamaño, se aprovecha la totalidad de la ventana del navegador
     renderer.setSize(window.innerWidth, window.innerHeight);
+
+    renderer.shadowMap.enabled = true;
     
     // La visualización se muestra en el lienzo recibido
     $(myCanvas).append(renderer.domElement);
     
     return renderer;  
   }
+
+  onMouseDown(event){
+    if (event.button === 0) {   // Left button
+      console.log(this.applicationMode);
+      this.mouseDown = true;
+      switch (this.applicationMode) {
+        //Seleccionar ficha
+        
+        case 'NO_ACTION':
+          this.moverFichaRaton(event,'SELECT_FICHA');
+          break;
+        //Seleccionar movimiento
+        case 'SELECT_FICHA' :
+          this.moverFichaRaton(event, 'SELECT_MOVIMIENTO');
+        break;
+        default :
+          this.applicationMode = 'NO_ACTION';
+        break;
+      }
+    } else {
+      this.applicationMode = 'NO_ACTION';
+    }
+  }
+
+  mostrarPosiblesCasillasPosiblesCasillas(event, action){
+    this.tablero.mostrarPosiblesCasillas(event,action);
+  }
+
+  moverFichaRaton(event,action){
+    this.tablero.moverFichaRaton(event,action)
+  }
   
   getCamera () {
     // En principio se devuelve la única cámara que tenemos
     // Si hubiera varias cámaras, este método decidiría qué cámara devuelve cada vez que es consultado
     return this.camera;
+  }
+
+  setApplicationMode(action){
+    this.applicationMode=action;
   }
   
   setCameraAspect (ratio) {
@@ -173,16 +206,20 @@ class MyScene extends THREE.Scene {
     this.renderer.setSize (window.innerWidth, window.innerHeight);
   }
 
+  // It returns the camera controls
+  getCameraControls () {
+    return this.trackballControls;
+  }
+
   update () {
     // Se actualizan los elementos de la escena para cada frame
     // Se actualiza la intensidad de la luz con lo que haya indicado el usuario en la gui
     this.spotLight.intensity = this.guiControls.lightIntensity;
     
     // Se muestran o no los ejes según lo que idique la GUI
-    this.axis.visible = this.guiControls.axisOnOff;
     
     // Se actualiza la posición de la cámara según su controlador
-    this.cameraControl.update();
+    this.trackballControls.update();
     
     // Se actualiza el resto del modelo
     this.tablero.update()
@@ -190,10 +227,33 @@ class MyScene extends THREE.Scene {
     // Le decimos al renderizador "visualiza la escena que te indico usando la cámara que te estoy pasando"
     this.renderer.render (this, this.getCamera());
 
+
+      if (this.tablero.getTurno() === 0){
+        this.cameraZ += 1.5;
+        this.camera.position.set (0, 75, this.cameraZ);
+        if (this.cameraZ >= 75){
+          this.cameraZ = 75;
+        }
+      }
+      else{
+        this.cameraZ -= 1.5;
+        this.camera.position.set (0, 75, this.cameraZ);
+        if (this.cameraZ <= -75){
+          this.cameraZ = -75;
+        }
+      }
+
+
     // Este método debe ser llamado cada vez que queramos visualizar la escena de nuevo.
     // Literalmente le decimos al navegador: "La próxima vez que haya que refrescar la pantalla, llama al método que te indico".
     // Si no existiera esta línea,  update()  se ejecutaría solo la primera vez.
     requestAnimationFrame(() => this.update())
+
+
+
+
+
+
   }
 }
 
@@ -203,9 +263,12 @@ $(function () {
   // Se instancia la escena pasándole el  div  que se ha creado en el html para visualizar
   var scene = new MyScene("#WebGL-output");
 
-  // Se añaden los listener de la aplicación. En este caso, el que va a comprobar cuándo se modifica el tamaño de la ventana de la aplicación.
-  window.addEventListener ("resize", () => scene.onWindowResize());
+   // Se añaden los listener de la aplicación. En este caso, el que va a comprobar cuándo se modifica el tamaño de la ventana de la aplicación.
+   window.addEventListener ("resize", () => scene.onWindowResize());
+   window.addEventListener ("mousedown", (event) => scene.onMouseDown(event), true);
   
   // Que no se nos olvide, la primera visualización.
   scene.update();
 });
+
+export { MyScene };

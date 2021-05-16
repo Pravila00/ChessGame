@@ -1,8 +1,8 @@
 import * as THREE from '../libs/three.module.js'
 import { Ficha } from './Ficha.js'
 class Peon extends Ficha {
-  constructor(tablero,color) {
-    super();
+  constructor(tablero,color,fila,columna) {
+    super(tablero,color);
     
     // Puntos
     this.points = [];
@@ -35,9 +35,9 @@ class Peon extends Ficha {
       var revolMat = new THREE.MeshPhongMaterial({color: 0xffffff});
     }
     else{
-      var revolMat = new THREE.MeshPhongMaterial({color: 0x000000});
+      var revolMat = new THREE.MeshPhongMaterial({color: 0x2D2C2C});
     }
-    
+
     // Para crear una línea visible, como en el vídeo
     this.revol = new THREE.Mesh(revolGeom, revolMat); 
     this.add (this.revol);

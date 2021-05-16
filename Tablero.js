@@ -5,12 +5,15 @@ import { Caballo } from './Caballo.js';
 import { Alfil } from './Alfil.js';
 import { Rey } from './Rey.js';
 import { Dama } from './Dama.js';
+import { Ficha } from './Ficha.js';
+import { MyScene } from './MyScene.js' 
+import { ThreeBSP } from '../libs/ThreeBSP.js';
 class Tablero extends THREE.Object3D {
-  constructor(gui,titleGui) {
+  constructor(scene, aWidth, aDeep) {
     super();
     
    //Creamos la matriz de casillas
-   this.casillas = [
+  this.casillas = [
     [null,null,null,null,null,null,null,null],
     [null,null,null,null,null,null,null,null],
     [null,null,null,null,null,null,null,null],
@@ -20,11 +23,26 @@ class Tablero extends THREE.Object3D {
     [null,null,null,null,null,null,null,null],
     [null,null,null,null,null,null,null,null]
    ];
-    
+   
+    this.fichas = new THREE.Object3D();
+    this.scene = scene;
+    this.width = aWidth;
+    this.deep = aDeep;
 
+    //Empiezan los blancos
+    this.turno = 0;
+
+    this.raycaster = new THREE.Raycaster ();
 
     this.inicializarTablero();
 
+    this.setMensaje("Turno: Blancas");
+
+    this.add(this.fichas);
+  }
+
+  setMensaje(str){
+    document.getElementById("Messages").innerHTML="<h2>"+str +"</h2>";
   }
 
   inicializarTablero(){
@@ -38,7 +56,7 @@ class Tablero extends THREE.Object3D {
     for(var i=0;i<8;i++){
       for(var j=0;j<8;j++){
         if(this.casillas[i][j] !== null){
-          this.add(this.casillas[i][j]);
+          this.fichas.add(this.casillas[i][j]);
         }
       }
     }
@@ -51,24 +69,23 @@ class Tablero extends THREE.Object3D {
     for(var i=0;i<8;i++){
         peones.push(new Peon(this,1));
     }
-    var torre1 = new Torre(this,1);
-    var caballo1 = new Caballo(this,1);
-    var alfil1 = new Alfil(this,1);
-    var torre2 = new Torre(this,1);
-    var caballo2 = new Caballo(this,1);
-    var alfil2 = new Alfil(this,1);
-    var rey = new Rey(this,1);
-    var dama = new Dama(this,1);
+    var torre1_negro = new Torre(this,1);
+    var caballo1_negro = new Caballo(this,1);
+    var alfil1_negro = new Alfil(this,1);
+    var torre2_negro = new Torre(this,1);
+    var caballo2_negro = new Caballo(this,1);
+    var alfil2_negro = new Alfil(this,1);
+    var rey_negro = new Rey(this,1);
+    var dama_negro = new Dama(this,1);
 
-    //Incluimos las fichas en casilla
-    this.moverFicha(torre1,7,0);
-    this.moverFicha(caballo1,7,1);
-    this.moverFicha(alfil1,7,2);
-    this.moverFicha(dama,7,3);
-    this.moverFicha(rey,7,4);
-    this.moverFicha(alfil2,7,5);
-    this.moverFicha(caballo2,7,6);
-    this.moverFicha(torre2,7,7);
+    this.moverFicha(torre1_negro,7,0);
+    this.moverFicha(caballo1_negro,7,1);
+    this.moverFicha(alfil1_negro,7,2);
+    this.moverFicha(dama_negro,7,3);
+    this.moverFicha(rey_negro,7,4);
+    this.moverFicha(alfil2_negro,7,5);
+    this.moverFicha(caballo2_negro,7,6);
+    this.moverFicha(torre2_negro,7,7);
     
     for(var i=0;i<8;i++){
       this.moverFicha(peones[i],6,i);
@@ -103,9 +120,6 @@ class Tablero extends THREE.Object3D {
     for(var i=0;i<8;i++){
       this.moverFicha(peones[i],1,i);
     }
-    
-    
-
   }
 
   moverFicha(ficha,nuevaFila,nuevaColumna){
@@ -113,6 +127,112 @@ class Tablero extends THREE.Object3D {
     this.casillas[ficha.getFila()][ficha.getColumna()] = null;
     this.casillas[nuevaFila][nuevaColumna] = ficha;
     
+  }
+
+  mostrarPosiblesCasillas(event, action){
+    
+  }
+
+  getMouse (event) {
+    var mouse = new THREE.Vector2 ();
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = 1 - 2 * (event.clientY / window.innerHeight);
+    return mouse;
+  }
+
+  moverFichaRaton(event,action){
+    console.log(action);
+    var mouse = this.getMouse (event);
+    this.raycaster.setFromCamera (mouse, this.scene.getCamera());
+    switch (action) {
+      case 'SELECT_FICHA' :
+        this.remove(this.movimientos);
+        var pickedObjects = this.raycaster.intersectObjects (this.fichas.children,true);
+        if (pickedObjects.length > 0) {
+          this.fichaSeleccionada = pickedObjects[0].object.parent;
+          if (this.fichaSeleccionada.getColor() === this.turno){
+            this.movimientos = this.fichaSeleccionada.getMovimientos();
+            this.add(this.movimientos);
+            this.scene.setApplicationMode('SELECT_FICHA');
+          }
+          else{
+            this.scene.setApplicationMode('NO_ACTION');
+          }
+          
+        }
+
+      break;
+      case 'SELECT_MOVIMIENTO':
+        var pickedObjects = this.raycaster.intersectObjects (this.movimientos.children,true);
+        if (pickedObjects.length > 0) {
+          var movimiento = pickedObjects[0].object;
+          var posicion = movimiento.position;
+          var fila = Math.round(this.fichaSeleccionada.getFilaConPosicion(posicion));
+          var columna = Math.round(this.fichaSeleccionada.getColumnaConPosicion(posicion));
+          this.casillas[this.fichaSeleccionada.getFila()][this.fichaSeleccionada.getColumna()] = null;
+          //Si hay una ficha en la casilla a la que vamos la matamos
+          if(this.casillas[fila][columna] !== null){
+            this.fichas.remove(this.casillas[fila][columna]);
+          }
+          this.casillas[fila][columna] = this.fichaSeleccionada;
+          
+          this.fichaSeleccionada.mover(fila,columna);
+
+          this.remove(this.movimientos);
+          this.scene.setApplicationMode('NO_ACTION');
+          //Cambia de turno
+          this.turno===0?this.turno=1:this.turno=0;
+
+          //Turno blancas
+          if(this.turno===0){
+            this.setMensaje("Turno: Blancas");
+          }
+          //Turno negras
+          else{
+            this.setMensaje("Turno: Negras");
+          }
+        }
+        else{
+          this.fichaSeleccionada = null;
+          this.remove(this.movimientos);
+          var pickedObjects = this.raycaster.intersectObjects (this.fichas.children,true);
+          if (pickedObjects.length > 0) {
+            this.fichaSeleccionada = pickedObjects[0].object.parent;
+            if (this.fichaSeleccionada.getColor() === this.turno){
+              this.movimientos = this.fichaSeleccionada.getMovimientos();
+              this.add(this.movimientos);
+              this.scene.setApplicationMode('SELECT_FICHA');
+            }
+            else{
+              this.scene.setApplicationMode('NO_ACTION');
+            }
+          }
+        }
+      break;
+
+    }
+    
+  }
+
+  hayFichaEnLaCasilla
+  getPosiblesMovimientos(ficha){
+    return ficha.getPosiblesMovimientos();
+  }
+
+  getFicha(event){
+    var mouse = this.getMouse (event);
+    this.raycaster.setFromCamera (mouse, this.scene.getCamera());
+    var surfaces = [this.ground];
+    var pickedObjects = this.raycaster.intersectObjects (surfaces);
+    if (pickedObjects.length > 0) {
+      return new THREE.Vector2 (pickedObjects[0].point.x, pickedObjects[0].point.z);
+    } else
+      return null;
+
+  }
+
+  getTurno(){
+    return this.turno;
   }
 
   
