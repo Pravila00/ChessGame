@@ -114,7 +114,7 @@ class MyScene extends THREE.Scene {
     var geometryGround = new THREE.BoxGeometry (50,0.2,50);
     
     // El material se hará con una textura de madera
-    var texture = new THREE.TextureLoader().load('../imgs/textura-ajedrezada.jpg');
+    var texture = new THREE.TextureLoader().load('./imgs/textura-ajedrezada.jpg');
     var materialGround = new THREE.MeshPhongMaterial ({map: texture});
     
     // Ya se puede construir el Mesh
@@ -228,20 +228,20 @@ class MyScene extends THREE.Scene {
     this.renderer.render (this, this.getCamera());
 
 
-      if (this.tablero.getTurno() === 0){
-        this.cameraZ += 1.5;
-        this.camera.position.set (0, 75, this.cameraZ);
-        if (this.cameraZ >= 75){
-          this.cameraZ = 75;
-        }
-      }
-      else{
-        this.cameraZ -= 1.5;
-        this.camera.position.set (0, 75, this.cameraZ);
-        if (this.cameraZ <= -75){
-          this.cameraZ = -75;
-        }
-      }
+    //   if (this.tablero.getTurno() === 0){
+    //     this.cameraZ += 1.5;
+    //     this.camera.position.set (0, 75, this.cameraZ);
+    //     if (this.cameraZ >= 75){
+    //       this.cameraZ = 75;
+    //     }
+    //   }
+    //   else{
+    //     this.cameraZ -= 1.5;
+    //     this.camera.position.set (0, 75, this.cameraZ);
+    //     if (this.cameraZ <= -75){
+    //       this.cameraZ = -75;
+    //     }
+    //   }
 
 
     // Este método debe ser llamado cada vez que queramos visualizar la escena de nuevo.

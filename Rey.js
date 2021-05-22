@@ -1,5 +1,6 @@
 import * as THREE from '../libs/three.module.js'
 import { Ficha } from './Ficha.js'
+import { ThreeBSP } from '../libs/ThreeBSP.js'
  
 class Rey extends Ficha {
   constructor(tablero,color) {
@@ -23,27 +24,36 @@ class Rey extends Ficha {
     this.points.push (new THREE.Vector2 (0.6, 6.1, 0));
     this.points.push (new THREE.Vector2 (0.5, 6.2, 0));
 
-
     this.points.push (new THREE.Vector2 (0.8, 7.1, 0));
-    this.points.push (new THREE.Vector2 (0.2, 7.2, 0));
-    this.points.push (new THREE.Vector2 (0.2, 7.6, 0));
-    this.points.push (new THREE.Vector2 (0.5, 7.6, 0));
-    this.points.push (new THREE.Vector2 (0.5, 7.8, 0));
-    this.points.push (new THREE.Vector2 (0.2, 7.8, 0));
-    this.points.push (new THREE.Vector2 (0.2, 8.2, 0));
-    this.points.push (new THREE.Vector2 (0.0, 8.2, 0));
-
+    this.points.push (new THREE.Vector2 (0.0, 7.1, 0));
 
     var revolGeom = new THREE.LatheGeometry( this.points, 24, 0, 2*Math.PI );
+
+    var cruz1 = new THREE.CubeGeometry(0.2,1,0.2);
+    var cruz2 = new THREE.CubeGeometry(0.6,0.2,0.2);
+
+    cruz1.translate(0,7.6,0);
+    cruz2.translate(0,7.7,0);
+
+    var cruz1BSP = new ThreeBSP(cruz1);
+    var cruz2BSP = new ThreeBSP(cruz2);
+    var revolGeomBSP = new ThreeBSP(revolGeom);
+
+    var aux = cruz1BSP.union(cruz2BSP);
+    var aux2 = aux.union(revolGeomBSP);
+    
+
     if (color === 0){
-      var revolMat = new THREE.MeshPhongMaterial({color: 0xffffff});
+      var mat = new THREE.MeshPhongMaterial({color: 0xffffff});
     }
     else{
-      var revolMat = new THREE.MeshPhongMaterial({color: 0x2D2C2C});
+      var mat = new THREE.MeshPhongMaterial({color: 0x2D2C2C});
     }
     // Para crear una línea visible, como en el vídeo
-    this.revol = new THREE.Mesh(revolGeom, revolMat); 
-    this.add (this.revol);
+
+    this.rey = aux2.toMesh(mat);
+
+    this.add (this.rey);
 
   }
 
