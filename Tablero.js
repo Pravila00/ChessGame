@@ -123,20 +123,26 @@ class Tablero extends THREE.Object3D {
   }
 
   moverFicha(ficha,nuevaFila,nuevaColumna){
-    ficha.mover(nuevaFila,nuevaColumna);
-    this.casillas[ficha.getFila()][ficha.getColumna()] = null;
-    console.log(ficha.isPeon());
     if(ficha.isPeon() && ((nuevaFila===0 && ficha.getColor()===1) || (nuevaFila===7 && ficha.getColor()===0))){
       //El peon se transforma en dama
-      console.log("Pasa a dama");
+      this.fichas.remove(this.casillas[nuevaFila][nuevaColumna]);
+      this.casillas[ficha.getFila()][ficha.getColumna()] = null;
       var dama = new Dama(this,ficha.getColor());
+      dama.mover(nuevaFila,nuevaColumna);
       this.casillas[nuevaFila][nuevaColumna] = dama;
+      this.fichas.add(dama);
     }
     else{
+      this.casillas[ficha.getFila()][ficha.getColumna()] = null;
+      ficha.mover(nuevaFila,nuevaColumna);
       this.casillas[nuevaFila][nuevaColumna] = ficha;
     }
     
     
+  }
+
+  getObjetoFicha(fila,columna){
+    return this.casillas[fila][columna];
   }
 
 

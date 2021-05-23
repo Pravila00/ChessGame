@@ -35,6 +35,7 @@ class Ficha extends THREE.Object3D {
     return Math.abs(posicion.x + 22) / 6.3;
   }
 
+
   getFila(){
     return this.fila;
   }

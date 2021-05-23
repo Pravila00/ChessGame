@@ -5,6 +5,7 @@ import { ThreeBSP } from '../libs/ThreeBSP.js'
 class Rey extends Ficha {
   constructor(tablero,color) {
     super(tablero,color,"Rey");
+
     this.haMovido = false;
     
     // Puntos
@@ -61,7 +62,9 @@ class Rey extends Ficha {
   mover(nuevaFila,nuevaColumna){
     this.fila = nuevaFila;
     this.columna = nuevaColumna;
-    this.haMovido = true;
+
+    if (!((nuevaFila == 0 && nuevaColumna == 4) || (nuevaFila == 0 && nuevaColumna == 4)))
+        this.haMovido = true;
   }
 
   getMovimientos(){
@@ -79,12 +82,55 @@ class Rey extends Ficha {
         }
     }
 
-    //enroque
+    //Enroque corto
+
+    console.log("antes");
+
+    if (this.haMovido === false){
+        console.log("no ha movido el rey");
+        var ficha = this.tablero.getObjetoFicha(this.fila,7)
+        if (ficha.getTipoFicha().localeCompare("Torre") == 0){
+            if (!ficha.getHaMovido()){
+                console.log("no ha movido torre der");
+                var posible= true;
+                for (var i= this.columna ; i<7 && posible; i++){
+                    if (this.tablero.hayFichaEnLaCasilla(this.fila,i) !== 0){
+                        posible = false;
+                    }
+                }
+                if (posible){
+                    movimientos.add(this.createMovimiento(this.fila,this.columna+2));
+                }
+            }
+        }
+
+    //Enroque Largo
+        
+        if (!this.tablero.getObjetoFicha(this.fila,0).getHaMovido()){
+            console.log("no ha movido torre izq");
+            var posible= true;
+            for (var i= this.columna ; i>1 && posible; i--){
+                if (this.tablero.hayFichaEnLaCasilla(this.fila,i) !== 0){
+                    posible = false;
+                }
+            }
+            if (posible){
+                movimientos.add(this.createMovimiento(this.fila,this.columna-2));
+            }
+        }
+
+    }
+
+    
 
     
 
     return movimientos;
   }
+
+  getHaMovido(){
+    return this.haMovido;
+}
 
 }
 
