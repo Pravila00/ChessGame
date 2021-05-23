@@ -50,8 +50,17 @@ class Peon extends Ficha {
     //Si es blanco el peon va hacia delante en el tablero
     if(this.color===0){
         //Primero el movimiento normal
-        if(this.tablero.hayFichaEnLaCasilla(this.fila+1,this.columna,this.color) === 0){
+        if (this.columna<=6){
+            if(this.tablero.hayFichaEnLaCasilla(this.fila+1,this.columna,this.color) === 0){
             movimientos.add(this.createMovimiento(this.fila+1,this.columna));
+            }
+            //Comer
+            if(this.tablero.hayFichaEnLaCasilla(this.fila+1,this.columna-1,this.color) === 1){
+                movimientos.add(this.createMovimiento(this.fila+1,this.columna-1));
+            }
+            if(this.tablero.hayFichaEnLaCasilla(this.fila+1,this.columna+1,this.color) === 1){
+                movimientos.add(this.createMovimiento(this.fila+1,this.columna+1));
+            }
         }
     }
     //Si es negro el peon va hacia atras en el tablero
