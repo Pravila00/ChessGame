@@ -45,6 +45,10 @@ class Torre extends Ficha {
 
   }
 
+  getHaMovido(){
+      return this.haMovido;
+  }
+
   getMovimientos(){
     var movimientos = new THREE.Object3D();
 

@@ -16,6 +16,7 @@ class MyScene extends THREE.Scene {
 
     this.cameraX = 0;
     this.cameraZ = 100;
+    this.velocidadGiro=1;
     
     // Lo primero, crear el visualizador, pasándole el lienzo sobre el que realizar los renderizados.
     this.renderer = this.createRenderer(myCanvas);
@@ -210,6 +211,10 @@ class MyScene extends THREE.Scene {
     return this.trackballControls;
   }
 
+  setInicioCambio(){
+      this.empiezaGiro = true;
+  }
+
   update () {
     // Se actualizan los elementos de la escena para cada frame
     // Se actualiza la intensidad de la luz con lo que haya indicado el usuario en la gui
@@ -227,20 +232,47 @@ class MyScene extends THREE.Scene {
     this.renderer.render (this, this.getCamera());
 
 
-    //   if (this.tablero.getTurno() === 0){
-    //     this.cameraZ += 1.5;
-    //     this.camera.position.set (0, 75, this.cameraZ);
-    //     if (this.cameraZ >= 75){
-    //       this.cameraZ = 75;
-    //     }
-    //   }
-    //   else{
-    //     this.cameraZ -= 1.5;
-    //     this.camera.position.set (0, 75, this.cameraZ);
-    //     if (this.cameraZ <= -75){
-    //       this.cameraZ = -75;
-    //     }
-    //   }
+    if (this.tablero.getTurno() === 0){
+        this.cameraZ += this.velocidadGiro;
+
+        if(this.empiezaGiro)
+            this.cameraX += this.velocidadGiro;
+        else
+            this.cameraX -= this.velocidadGiro;
+
+        this.camera.position.set (this.cameraX, 75, this.cameraZ);
+        if (this.cameraZ >= 75){
+            this.cameraZ = 75;
+        }
+        if (this.cameraX >= 75){
+            this.cameraX = 75;
+            this.empiezaGiro = false;
+        }
+        if (this.cameraX <= 0){
+            this.cameraX = 0;
+        }
+    }
+    else{
+        this.cameraZ -= this.velocidadGiro;
+
+        if(!this.empiezaGiro)
+            this.cameraX += this.velocidadGiro;
+        else
+            this.cameraX -= this.velocidadGiro;
+
+        this.camera.position.set (this.cameraX, 75, this.cameraZ);
+        if (this.cameraZ <= -75){
+            this.cameraZ = -75;
+        }
+        if (this.cameraX <= -75){
+            this.cameraX = -75;
+            this.empiezaGiro = false;
+        }
+        if (this.cameraX >= 0){
+            this.cameraX = 0;
+        }
+
+    }
 
 
     // Este método debe ser llamado cada vez que queramos visualizar la escena de nuevo.

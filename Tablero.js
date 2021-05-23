@@ -52,6 +52,8 @@ class Tablero extends THREE.Object3D {
     //Creamos las fichas negras y las posicionamos
     this.createFichasNegras();
     
+    //this.createFichas();
+
     //Añadimos todas las fichas al modelo
     for(var i=0;i<8;i++){
       for(var j=0;j<8;j++){
@@ -62,6 +64,32 @@ class Tablero extends THREE.Object3D {
     }
 
   }
+
+//   createFichas(){
+//       for (var i=0 ; i<8 ; i++){
+//         this.moverFicha(new Peon(this,1),6,i);
+//         this.moverFicha(new Peon(this,0),1,i);
+//       }
+
+//       this.moverFicha(new Torre(this,1),7,0);
+//       this.moverFicha(new Caballo(this,1),7,1);
+//       this.moverFicha(new Alfil(this,1),7,2);
+//       this.moverFicha(new Dama(this,1),7,3);
+//       this.moverFicha(new Rey(this,1),7,4);
+//       this.moverFicha(new Alfil(this,1),7,5);
+//       this.moverFicha(new Caballo(this,1),7,6);
+//        this.moverFicha(new Torre(this,1),7,7);
+
+//       this.moverFicha(new Torre(this,0),0,0);
+//       this.moverFicha(new Caballo(this,0),0,1);
+//       this.moverFicha(new Alfil(this,0),0,2);
+//       this.moverFicha(new Dama(this,0),0,3);
+//       this.moverFicha(new Rey(this,0),0,4);
+//       this.moverFicha(new Alfil(this,0),0,5);
+//       this.moverFicha(new Caballo(this,0),0,6);
+//       this.moverFicha(new Torre(this,0),0,7);
+
+//   }
 
   createFichasNegras(){
     //Creamos las fichas
@@ -187,6 +215,17 @@ class Tablero extends THREE.Object3D {
             this.fichas.remove(this.casillas[fila][columna]);
           }
           this.casillas[fila][columna] = this.fichaSeleccionada;
+
+          if(this.fichaSeleccionada.getTipoFicha().localeCompare("Rey") == 0){
+            if (!this.fichaSeleccionada.getHaMovido()){
+                if (columna ==  6){
+                    this.moverFicha(this.casillas[fila][7],fila,5);
+                }
+                if(columna == 2){
+                    this.moverFicha(this.casillas[fila][0],fila,3);
+                }
+            }
+          }
           
           this.moverFicha(this.fichaSeleccionada,fila,columna);
 
@@ -194,6 +233,7 @@ class Tablero extends THREE.Object3D {
           this.scene.setApplicationMode('NO_ACTION');
           //Cambia de turno
           this.turno===0?this.turno=1:this.turno=0;
+          this.scene.setInicioCambio();
 
           //Turno blancas
           if(this.turno===0){
