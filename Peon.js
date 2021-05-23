@@ -2,7 +2,7 @@ import * as THREE from '../libs/three.module.js'
 import { Ficha } from './Ficha.js'
 class Peon extends Ficha {
   constructor(tablero,color,fila,columna) {
-    super(tablero,color);
+    super(tablero,color,"Peon");
     
     // Puntos
     this.points = [];
@@ -50,22 +50,51 @@ class Peon extends Ficha {
     //Si es blanco el peon va hacia delante en el tablero
     if(this.color===0){
         //Primero el movimiento normal
-        if (this.columna<=6){
+        if (this.fila<=6){
             if(this.tablero.hayFichaEnLaCasilla(this.fila+1,this.columna,this.color) === 0){
-            movimientos.add(this.createMovimiento(this.fila+1,this.columna));
+                movimientos.add(this.createMovimiento(this.fila+1,this.columna));
             }
             //Comer
-            if(this.tablero.hayFichaEnLaCasilla(this.fila+1,this.columna-1,this.color) === 1){
-                movimientos.add(this.createMovimiento(this.fila+1,this.columna-1));
+            if (this.columna>=1){
+                if(this.tablero.hayFichaEnLaCasilla(this.fila+1,this.columna-1,this.color) === 1){
+                    movimientos.add(this.createMovimiento(this.fila+1,this.columna-1));
+                }
             }
-            if(this.tablero.hayFichaEnLaCasilla(this.fila+1,this.columna+1,this.color) === 1){
-                movimientos.add(this.createMovimiento(this.fila+1,this.columna+1));
+            if (this.columna<=6){
+                if(this.tablero.hayFichaEnLaCasilla(this.fila+1,this.columna+1,this.color) === 1){
+                    movimientos.add(this.createMovimiento(this.fila+1,this.columna+1));
+                }
+            }
+        }
+        if (this.fila === 1){
+            if(this.tablero.hayFichaEnLaCasilla(this.fila+1,this.columna,this.color) === 0 && this.tablero.hayFichaEnLaCasilla(this.fila+2,this.columna,this.color) === 0){
+                movimientos.add(this.createMovimiento(this.fila+2,this.columna));
             }
         }
     }
     //Si es negro el peon va hacia atras en el tablero
     else{
-      movimientos.add(this.createMovimiento(this.fila,this.columna-1));
+        if (this.fila>=1){
+            if(this.tablero.hayFichaEnLaCasilla(this.fila-1,this.columna,this.color) === 0){
+                movimientos.add(this.createMovimiento(this.fila-1,this.columna));
+            }
+            //Comer
+            if (this.columna>=1){
+                if(this.tablero.hayFichaEnLaCasilla(this.fila-1,this.columna-1,this.color) === 1){
+                    movimientos.add(this.createMovimiento(this.fila-1,this.columna-1));
+                }
+            }
+            if (this.columna<=6){
+                if(this.tablero.hayFichaEnLaCasilla(this.fila-1,this.columna+1,this.color) === 1){
+                    movimientos.add(this.createMovimiento(this.fila-1,this.columna+1));
+                }
+            }
+        }
+        if (this.fila === 6){
+            if(this.tablero.hayFichaEnLaCasilla(this.fila-1,this.columna,this.color) === 0 && this.tablero.hayFichaEnLaCasilla(this.fila-2,this.columna,this.color) === 0){
+                movimientos.add(this.createMovimiento(this.fila-2,this.columna));
+            }
+        }
     }
 
     return movimientos;

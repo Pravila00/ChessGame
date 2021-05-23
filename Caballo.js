@@ -4,7 +4,7 @@ import { Ficha } from './Ficha.js'
  
 class Caballo extends Ficha {
   constructor(tablero,color) {
-    super(tablero,color);
+    super(tablero,color,"Caballo");
 
     var base = new THREE.CylinderGeometry(2,2,0.5,32,32);
     var cuerpo = new THREE.CylinderGeometry(0.7,1.3,4.8,32,32);
@@ -70,6 +70,54 @@ class Caballo extends Ficha {
     var caballo = aux5.toMesh(mat);
     this.add(caballo);
 
+  }
+
+  getMovimientos(){
+    var movimientos = new THREE.Object3D();
+
+    if (this.fila+2 <=7  && this.columna+1 <=7){
+        if(this.tablero.hayFichaEnLaCasilla(this.fila+2,this.columna+1,this.color) !== 2){
+            movimientos.add(this.createMovimiento(this.fila+2,this.columna+1));
+        }
+    }
+    if (this.fila+1 <=7  && this.columna+2 <=7){
+        if(this.tablero.hayFichaEnLaCasilla(this.fila+1,this.columna+2,this.color) !== 2){
+            movimientos.add(this.createMovimiento(this.fila+1,this.columna+2));
+        }
+    }
+    if (this.fila-1 >=0  && this.columna+2 <=7){
+        if(this.tablero.hayFichaEnLaCasilla(this.fila-1,this.columna+2,this.color) !== 2){
+            movimientos.add(this.createMovimiento(this.fila-1,this.columna+2));
+        }
+    }
+    if (this.fila-2 >=0  && this.columna+1 <=7){
+        if(this.tablero.hayFichaEnLaCasilla(this.fila-2,this.columna+1,this.color) !== 2){
+            movimientos.add(this.createMovimiento(this.fila-2,this.columna+1));
+        }
+    }
+
+    if (this.fila+2 <=7  && this.columna-1 >=0){
+        if(this.tablero.hayFichaEnLaCasilla(this.fila+2,this.columna-1,this.color) !== 2){
+            movimientos.add(this.createMovimiento(this.fila+2,this.columna-1));
+        }
+    }
+    if (this.fila+1 <=7  && this.columna-2 >=0){
+        if(this.tablero.hayFichaEnLaCasilla(this.fila+1,this.columna-2,this.color) !== 2){
+            movimientos.add(this.createMovimiento(this.fila+1,this.columna-2));
+        }
+    }
+    if (this.fila-1 >=0  && this.columna-2 >=0){
+        if(this.tablero.hayFichaEnLaCasilla(this.fila-1,this.columna-2,this.color) !== 2){
+            movimientos.add(this.createMovimiento(this.fila-1,this.columna-2));
+        }
+    }
+    if (this.fila-2 >=0  && this.columna-1 >=0){
+        if(this.tablero.hayFichaEnLaCasilla(this.fila-2,this.columna-1,this.color) !== 2){
+            movimientos.add(this.createMovimiento(this.fila-2,this.columna-1));
+        }
+    }
+
+    return movimientos;
   }
 
 }

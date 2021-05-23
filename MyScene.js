@@ -150,7 +150,6 @@ class MyScene extends THREE.Scene {
 
   onMouseDown(event){
     if (event.button === 0) {   // Left button
-      console.log(this.applicationMode);
       this.mouseDown = true;
       switch (this.applicationMode) {
         //Seleccionar ficha

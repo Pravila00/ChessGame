@@ -3,7 +3,8 @@ import { Ficha } from './Ficha.js'
  
 class Torre extends Ficha {
   constructor(tablero,color) {
-    super(tablero,color);
+    super(tablero,color,"Torre");
+    this.haMovido = false;
     
     // Puntos
     this.points = [];
@@ -42,6 +43,96 @@ class Torre extends Ficha {
     this.revol = new THREE.Mesh(revolGeom, revolMat); 
     this.add (this.revol);
 
+  }
+
+  getMovimientos(){
+    var movimientos = new THREE.Object3D();
+
+    //Recorremos las filas superiores de la torre (Arriba)
+    var hayFichaEnElCamino = false;
+    for(var i=this.fila+1;i<8 && !hayFichaEnElCamino;i++){
+      var fichaEnCasilla = this.tablero.hayFichaEnLaCasilla(i,this.columna,this.color);
+      switch(fichaEnCasilla){
+        //No hay ficha
+        case 0:
+          movimientos.add(this.createMovimiento(i,this.columna));
+        break;
+        //Hay ficha enemiga
+        case 1:
+          movimientos.add(this.createMovimiento(i,this.columna));
+          hayFichaEnElCamino=true;
+        break;
+        //Hay ficha aliada
+        case 2:
+          hayFichaEnElCamino=true;
+        break;
+      }
+    }
+      
+    //Recorremos las filas inferiores de la torre (Abajo)
+    hayFichaEnElCamino = false;
+    for(var i=this.fila-1;i>=0 && !hayFichaEnElCamino;i--){
+      var fichaEnCasilla = this.tablero.hayFichaEnLaCasilla(i,this.columna,this.color);
+      switch(fichaEnCasilla){
+        //No hay ficha
+        case 0:
+          movimientos.add(this.createMovimiento(i,this.columna));
+        break;
+        //Hay ficha enemiga
+        case 1:
+          movimientos.add(this.createMovimiento(i,this.columna));
+          hayFichaEnElCamino=true;
+        break;
+        //Hay ficha aliada
+        case 2:
+          hayFichaEnElCamino=true;
+        break;
+      }
+    }
+
+    //Recorremos las columnas superiores de la torre (Izquierda)
+    hayFichaEnElCamino = false;
+    for(var i=this.columna-1;i>=0 && !hayFichaEnElCamino;i--){
+      var fichaEnCasilla = this.tablero.hayFichaEnLaCasilla(this.fila,i,this.color);
+      switch(fichaEnCasilla){
+        //No hay ficha
+        case 0:
+          movimientos.add(this.createMovimiento(this.fila,i));
+        break;
+        //Hay ficha enemiga
+        case 1:
+          movimientos.add(this.createMovimiento(this.fila,i));
+          hayFichaEnElCamino=true;
+        break;
+        //Hay ficha aliada
+        case 2:
+          hayFichaEnElCamino=true;
+        break;
+      }
+    }
+
+    //Recorremos las columnas inferiores de la torre (Derecha)
+    hayFichaEnElCamino = false;
+    for(var i=this.columna+1;i<8 && !hayFichaEnElCamino;i++){
+      var fichaEnCasilla = this.tablero.hayFichaEnLaCasilla(this.fila,i,this.color);
+      switch(fichaEnCasilla){
+        //No hay ficha
+        case 0:
+          movimientos.add(this.createMovimiento(this.fila,i));
+        break;
+        //Hay ficha enemiga
+        case 1:
+          movimientos.add(this.createMovimiento(this.fila,i));
+          hayFichaEnElCamino=true;
+        break;
+        //Hay ficha aliada
+        case 2:
+          hayFichaEnElCamino=true;
+        break;
+      }
+    }
+ 
+    return movimientos;
   }
 
   

@@ -4,7 +4,8 @@ import { ThreeBSP } from '../libs/ThreeBSP.js'
  
 class Rey extends Ficha {
   constructor(tablero,color) {
-    super(tablero,color);
+    super(tablero,color,"Rey");
+    this.haMovido = false;
     
     // Puntos
     this.points = [];
@@ -55,6 +56,34 @@ class Rey extends Ficha {
 
     this.add (this.rey);
 
+  }
+
+  mover(nuevaFila,nuevaColumna){
+    this.fila = nuevaFila;
+    this.columna = nuevaColumna;
+    this.haMovido = true;
+  }
+
+  getMovimientos(){
+    var movimientos = new THREE.Object3D();
+
+    for (var i=-1 ; i<2 ; i++){
+        for (var j= -1 ; j<2; j++){
+            if (i !== 0 || j!==0){
+                if (this.fila+i <= 7 && this.fila+i >=0 && this.columna+j <=7 && this.columna+j >=0){
+                    if(this.tablero.hayFichaEnLaCasilla(this.fila+i,this.columna+j,this.color) !== 2){
+                        movimientos.add(this.createMovimiento(this.fila+i,this.columna+j));
+                    }
+                }
+            }
+        }
+    }
+
+    //enroque
+
+    
+
+    return movimientos;
   }
 
 }

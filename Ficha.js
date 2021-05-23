@@ -1,12 +1,13 @@
 import * as THREE from '../libs/three.module.js'
  
 class Ficha extends THREE.Object3D {
-  constructor(tablero,color) {
+  constructor(tablero,color,tipoFicha) {
     super();
     this.fila = 0;
     this.columna = 0;
     this.tablero = tablero;
     this.color = color;
+    this.tipoFicha = tipoFicha;
   }
   
   mover(nuevaFila,nuevaColumna){
@@ -14,12 +15,19 @@ class Ficha extends THREE.Object3D {
     this.columna = nuevaColumna;
   }
 
+  getTipoFicha(){
+    return this.tipoFicha;
+  }
+
+  isPeon(){
+    return this.getTipoFicha().localeCompare("Peon") == 0;
+  }
+
   update () {
     this.position.set(-22 + this.columna * 6.3 ,0,22 + this.fila * -6.3);
   }
 
   getFilaConPosicion(posicion){
-    console.log(posicion);
     return Math.abs(posicion.z - 22) / 6.3;
   }
 
@@ -41,7 +49,7 @@ class Ficha extends THREE.Object3D {
 			side: THREE.DoubleSide,
 			flatShading: true, //Sombreado plano
 		});
-    var movimiento = new THREE.Mesh(new THREE.BoxGeometry(6.3,0.01,6.3),materialAmarillo);
+    var movimiento = new THREE.Mesh(new THREE.BoxGeometry(6.2,0.01,6.2),materialAmarillo);
     movimiento.position.set(-22 + columna * 6.3 ,0.1,22 + fila * -6.3)
     return movimiento;
   }

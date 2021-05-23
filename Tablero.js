@@ -125,13 +125,20 @@ class Tablero extends THREE.Object3D {
   moverFicha(ficha,nuevaFila,nuevaColumna){
     ficha.mover(nuevaFila,nuevaColumna);
     this.casillas[ficha.getFila()][ficha.getColumna()] = null;
-    this.casillas[nuevaFila][nuevaColumna] = ficha;
+    console.log(ficha.isPeon());
+    if(ficha.isPeon() && ((nuevaFila===0 && ficha.getColor()===1) || (nuevaFila===7 && ficha.getColor()===0))){
+      //El peon se transforma en dama
+      console.log("Pasa a dama");
+      var dama = new Dama(this,ficha.getColor());
+      this.casillas[nuevaFila][nuevaColumna] = dama;
+    }
+    else{
+      this.casillas[nuevaFila][nuevaColumna] = ficha;
+    }
+    
     
   }
 
-  mostrarPosiblesCasillas(event, action){
-    
-  }
 
   getMouse (event) {
     var mouse = new THREE.Vector2 ();
@@ -141,7 +148,6 @@ class Tablero extends THREE.Object3D {
   }
 
   moverFichaRaton(event,action){
-    console.log(action);
     var mouse = this.getMouse (event);
     this.raycaster.setFromCamera (mouse, this.scene.getCamera());
     switch (action) {
@@ -176,7 +182,7 @@ class Tablero extends THREE.Object3D {
           }
           this.casillas[fila][columna] = this.fichaSeleccionada;
           
-          this.fichaSeleccionada.mover(fila,columna);
+          this.moverFicha(this.fichaSeleccionada,fila,columna);
 
           this.remove(this.movimientos);
           this.scene.setApplicationMode('NO_ACTION');

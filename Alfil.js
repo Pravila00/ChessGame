@@ -3,7 +3,7 @@ import { Ficha } from './Ficha.js'
  
 class Alfil extends Ficha {
   constructor(tablero,color) {
-    super(tablero,color);
+    super(tablero,color,"Alfil");
     
     // Puntos
     this.points = [];
@@ -43,6 +43,112 @@ class Alfil extends Ficha {
     this.revol = new THREE.Mesh(revolGeom, revolMat); 
     this.add (this.revol);
 
+  }
+
+  getMovimientos(){
+    var movimientos = new THREE.Object3D();
+
+    //Arriba izquierda
+    var hayFichaEnElCamino = false;
+    var fila=this.fila+1;
+    var columna=this.columna-1;
+    while(fila<8 && columna>=0 && !hayFichaEnElCamino){
+      var fichaEnCasilla = this.tablero.hayFichaEnLaCasilla(fila,columna,this.color);
+      switch(fichaEnCasilla){
+        //No hay ficha
+        case 0:
+          movimientos.add(this.createMovimiento(fila,columna));
+        break;
+        //Hay ficha enemiga
+        case 1:
+          movimientos.add(this.createMovimiento(fila,columna));
+          hayFichaEnElCamino=true;
+        break;
+        //Hay ficha aliada
+        case 2:
+          hayFichaEnElCamino=true;
+        break;
+      }
+      fila++;
+      columna--;
+    }
+
+    //Arriba derecha
+    var hayFichaEnElCamino = false;
+    var fila=this.fila+1;
+    var columna=this.columna+1;
+    while(fila<8 && columna<8 && !hayFichaEnElCamino){
+      var fichaEnCasilla = this.tablero.hayFichaEnLaCasilla(fila,columna,this.color);
+      switch(fichaEnCasilla){
+        //No hay ficha
+        case 0:
+          movimientos.add(this.createMovimiento(fila,columna));
+        break;
+        //Hay ficha enemiga
+        case 1:
+          movimientos.add(this.createMovimiento(fila,columna));
+          hayFichaEnElCamino=true;
+        break;
+        //Hay ficha aliada
+        case 2:
+          hayFichaEnElCamino=true;
+        break;
+      }
+      fila++;
+      columna++;
+    }
+
+    //Abajo izquierda
+    var hayFichaEnElCamino = false;
+    var fila=this.fila-1;
+    var columna=this.columna-1;
+    while(fila>=0 && columna>=0 && !hayFichaEnElCamino){
+      var fichaEnCasilla = this.tablero.hayFichaEnLaCasilla(fila,columna,this.color);
+      switch(fichaEnCasilla){
+        //No hay ficha
+        case 0:
+          movimientos.add(this.createMovimiento(fila,columna));
+        break;
+        //Hay ficha enemiga
+        case 1:
+          movimientos.add(this.createMovimiento(fila,columna));
+          hayFichaEnElCamino=true;
+        break;
+        //Hay ficha aliada
+        case 2:
+          hayFichaEnElCamino=true;
+        break;
+      }
+      fila--;
+      columna--;
+    }
+
+    //Abajo derecha
+    var hayFichaEnElCamino = false;
+    var fila=this.fila-1;
+    var columna=this.columna+1;
+    while(fila>=0 && columna<8 && !hayFichaEnElCamino){
+      var fichaEnCasilla = this.tablero.hayFichaEnLaCasilla(fila,columna,this.color);
+      switch(fichaEnCasilla){
+        //No hay ficha
+        case 0:
+          movimientos.add(this.createMovimiento(fila,columna));
+        break;
+        //Hay ficha enemiga
+        case 1:
+          movimientos.add(this.createMovimiento(fila,columna));
+          hayFichaEnElCamino=true;
+        break;
+        //Hay ficha aliada
+        case 2:
+          hayFichaEnElCamino=true;
+        break;
+      }
+      fila--;
+      columna++;
+    }
+    
+    return movimientos;
   }
 
 }
