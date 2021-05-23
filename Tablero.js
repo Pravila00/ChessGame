@@ -214,7 +214,23 @@ class Tablero extends THREE.Object3D {
     
   }
 
-  hayFichaEnLaCasilla
+  hayFichaEnLaCasilla(fila,columna,color){ //Devuelve 0--> No hay ficha, 1-->Hay ficha enemiga, 2-->Hay ficha aliada
+    var result = -1;
+    var casilla = this.casillas[fila][columna];
+    if (casilla !== null){
+        if(casilla.getColor() === color){
+            result = 2;
+        }
+        else{
+            result = 1;
+        }
+    }
+    else{
+        result = 0;
+    }
+    return result;
+  }
+
   getPosiblesMovimientos(ficha){
     return ficha.getPosiblesMovimientos();
   }
@@ -234,6 +250,8 @@ class Tablero extends THREE.Object3D {
   getTurno(){
     return this.turno;
   }
+
+
 
   
   createGUI (gui,titleGui) {

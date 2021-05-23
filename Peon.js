@@ -44,6 +44,24 @@ class Peon extends Ficha {
 
   }
 
+  getMovimientos(){
+    var movimientos = new THREE.Object3D();
+
+    //Si es blanco el peon va hacia delante en el tablero
+    if(this.color===0){
+        //Primero el movimiento normal
+        if(this.tablero.hayFichaEnLaCasilla(this.fila+1,this.columna,this.color) === 0){
+            movimientos.add(this.createMovimiento(this.fila+1,this.columna));
+        }
+    }
+    //Si es negro el peon va hacia atras en el tablero
+    else{
+      movimientos.add(this.createMovimiento(this.fila,this.columna-1));
+    }
+
+    return movimientos;
+  }
+
 }
 
 export { Peon };
