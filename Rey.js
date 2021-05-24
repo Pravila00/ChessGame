@@ -29,7 +29,7 @@ class Rey extends Ficha {
     this.points.push (new THREE.Vector2 (0.8, 7.1, 0));
     this.points.push (new THREE.Vector2 (0.0, 7.1, 0));
 
-    var revolGeom = new THREE.LatheGeometry( this.points, 24, 0, 2*Math.PI );
+    var revolGeom = new THREE.LatheGeometry( this.points, 16, 0, 2*Math.PI );
 
     var cruz1 = new THREE.CubeGeometry(0.2,1,0.2);
     var cruz2 = new THREE.CubeGeometry(0.6,0.2,0.2);

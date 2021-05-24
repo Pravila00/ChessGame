@@ -32,7 +32,7 @@ class Torre extends Ficha {
     this.points.push (new THREE.Vector2 (1, 5.8, 0));
     this.points.push (new THREE.Vector2 (0, 5.8, 0));
     
-    var revolGeom = new THREE.LatheGeometry( this.points, 24, 0, 2*Math.PI );
+    var revolGeom = new THREE.LatheGeometry( this.points, 16, 0, 2*Math.PI );
     if (color === 0){
       var revolMat = new THREE.MeshPhongMaterial({color: 0xffffff});
     }

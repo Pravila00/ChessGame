@@ -6,13 +6,13 @@ class Caballo extends Ficha {
   constructor(tablero,color) {
     super(tablero,color,"Caballo");
 
-    var base = new THREE.CylinderGeometry(2,2,0.5,32,32);
-    var cuerpo = new THREE.CylinderGeometry(0.7,1.3,4.8,32,32);
-    var curva = new THREE.CylinderGeometry(2,2,2,32,32);
-    var cabeza = new THREE.SphereGeometry(1.2,32,32);
-    var cresta = new THREE.CylinderGeometry(1.2,1.2,0.5,32,32);
-    var cresta2 = new THREE.CylinderGeometry(1.2,1.2,0.5,32,32);
-    var crestaresta = new THREE.CylinderGeometry(2,2,2,32,32);
+    var base = new THREE.CylinderGeometry(2,2,0.5,16,16);
+    var cuerpo = new THREE.CylinderGeometry(0.7,1.3,4.8,16,16);
+    var curva = new THREE.CylinderGeometry(2,2,2,16,16);
+    var cabeza = new THREE.SphereGeometry(1.2,16,16);
+    var cresta = new THREE.CylinderGeometry(1.2,1.2,0.5,12,12);
+    var cresta2 = new THREE.CylinderGeometry(1.2,1.2,0.5,12,12);
+    var crestaresta = new THREE.CylinderGeometry(2,2,2,12,12);
     var boca = new THREE.CubeGeometry(2,2,2);
 
     base.translate(0,0.25,0);

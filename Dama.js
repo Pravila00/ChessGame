@@ -43,7 +43,7 @@ class Dama extends Ficha {
 
     
     
-    var revolGeom = new THREE.LatheGeometry( this.points, 24, 0, 2*Math.PI );
+    var revolGeom = new THREE.LatheGeometry( this.points, 16, 0, 2*Math.PI );
 
     if (color === 0){
       var revolMat = new THREE.MeshPhongMaterial({color: 0xffffff});
