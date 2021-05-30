@@ -103,14 +103,14 @@ class Tablero extends THREE.Object3D {
     var torre2_negro = new Torre(this,1);
     var caballo2_negro = new Caballo(this,1);
     var alfil2_negro = new Alfil(this,1);
-    var rey_negro = new Rey(this,1);
+    this.rey_negro = new Rey(this,1);
     var dama_negro = new Dama(this,1);
 
     this.moverFicha(torre1_negro,7,0);
     this.moverFicha(caballo1_negro,7,1);
     this.moverFicha(alfil1_negro,7,2);
     this.moverFicha(dama_negro,7,3);
-    this.moverFicha(rey_negro,7,4);
+    this.moverFicha(this.rey_negro,7,4);
     this.moverFicha(alfil2_negro,7,5);
     this.moverFicha(caballo2_negro,7,6);
     this.moverFicha(torre2_negro,7,7);
@@ -132,7 +132,7 @@ class Tablero extends THREE.Object3D {
     var torre2 = new Torre(this,0);
     var caballo2 = new Caballo(this,0);
     var alfil2 = new Alfil(this,0);
-    var rey = new Rey(this,0);
+    this.rey_blanco = new Rey(this,0);
     var dama = new Dama(this,0);
 
     //Incluimos las fichas en casilla
@@ -140,7 +140,7 @@ class Tablero extends THREE.Object3D {
     this.moverFicha(caballo1,0,1);
     this.moverFicha(alfil1,0,2);
     this.moverFicha(dama,0,3);
-    this.moverFicha(rey,0,4);
+    this.moverFicha(this.rey_blanco,0,4);
     this.moverFicha(alfil2,0,5);
     this.moverFicha(caballo2,0,6);
     this.moverFicha(torre2,0,7);
@@ -159,7 +159,7 @@ class Tablero extends THREE.Object3D {
       dama.mover(nuevaFila,nuevaColumna);
       this.casillas[nuevaFila][nuevaColumna] = dama;
       this.fichas.add(dama);
-    }
+    }    
     else{
       this.casillas[ficha.getFila()][ficha.getColumna()] = null;
       ficha.mover(nuevaFila,nuevaColumna);
@@ -233,6 +233,7 @@ class Tablero extends THREE.Object3D {
           this.scene.setApplicationMode('NO_ACTION');
           //Cambia de turno
           this.turno===0?this.turno=1:this.turno=0;
+
           this.scene.setInicioCambio();
 
           //Turno blancas
@@ -243,6 +244,14 @@ class Tablero extends THREE.Object3D {
           else{
             this.setMensaje("Turno: Negras");
           }
+
+          //Comprobamos si hay jaque
+          var jaque = this.checkJaque(this.turno);
+          console.log(jaque);
+          if(jaque){
+            $('#jaque_modal').modal('show');
+          }
+
         }
         else{
           this.fichaSeleccionada = null;
@@ -264,6 +273,214 @@ class Tablero extends THREE.Object3D {
 
     }
     
+  }
+
+  getTipoFichaTablero(fila,columna){
+    var resultado = "";
+    console.log("Fila: " + fila);
+    console.log("Columna: " + columna);
+    if(this.casillas[fila][columna] != null){
+      resultado = this.casillas[fila][columna].getTipoFicha(); 
+    }
+    return resultado;
+  }
+
+  getRey(color){
+    var rey;
+
+    if (color === 0){
+      rey = this.rey_blanco;
+    }else{
+      rey = this.rey_negro;
+    }
+    
+    return rey;
+  }
+
+  checkJaque(color){
+    var rey = this.getRey(color);
+    var rey_fila = rey.getFila();
+    var rey_columna = rey.getColumna();
+    //Recorremos las filas superiores(Arriba)
+    var hayFichaEnElCamino = false;
+    for(var i=rey_fila+1;i<8 && !hayFichaEnElCamino;i++){
+      var fichaEnCasilla = this.hayFichaEnLaCasilla(i,rey_columna,color);
+      if(fichaEnCasilla == 1){
+        var tipoFicha = this.getTipoFichaTablero(i,rey_columna);
+        if(tipoFicha == "Torre" || tipoFicha == "Dama"){
+          return true;
+        }
+        hayFichaEnElCamino=true;
+      }
+    }
+
+    //Recorremos las filas inferiores(Abajo)
+    var hayFichaEnElCamino = false;
+    for(var i=rey_fila-1;i>=0 && !hayFichaEnElCamino;i--){
+      fichaEnCasilla = this.hayFichaEnLaCasilla(i,rey_columna,color);
+      if(fichaEnCasilla == 1){
+        var tipoFicha = this.getTipoFichaTablero(i,rey_columna);
+        if(tipoFicha == "Torre" || tipoFicha == "Dama"){
+          return true;
+        }
+        hayFichaEnElCamino=true;
+      }
+    }
+
+    //Recorremos las columnas superiores(Izquierda)
+    var hayFichaEnElCamino = false;
+    for(var i=rey_columna-1;i>=0 && !hayFichaEnElCamino;i--){
+      var fichaEnCasilla = this.hayFichaEnLaCasilla(rey_fila,i,color);
+      if(fichaEnCasilla == 1){
+        var tipoFicha = this.getTipoFichaTablero(rey_fila,i);
+        if(tipoFicha == "Torre" || tipoFicha == "Dama"){
+          return true;
+        }
+        hayFichaEnElCamino=true;
+      }
+    }
+    
+    //Recorremos las columnas inferiores(Derecha)
+    var hayFichaEnElCamino = false;
+    for(var i=rey_columna+1;i<8 && !hayFichaEnElCamino;i++){
+      var fichaEnCasilla = this.hayFichaEnLaCasilla(rey_fila,i,color);
+      if(fichaEnCasilla == 1){
+        var tipoFicha = this.getTipoFichaTablero(rey_fila,i);
+        if(tipoFicha == "Torre" || tipoFicha == "Dama"){
+          return true;
+        }
+        hayFichaEnElCamino=true;
+      }
+    }
+
+    //Arriba izquierda
+    var hayFichaEnElCamino = false;
+    var fila_aux = rey_fila + 1;
+    var columna_aux = rey_columna -1 ;
+    while(fila_aux<8 && columna_aux >= 0 && !hayFichaEnElCamino){
+      var fichaEnCasilla = this.hayFichaEnLaCasilla(fila_aux,columna_aux,color);
+      if(fichaEnCasilla == 1){
+        var tipoFicha = this.getTipoFichaTablero(fila_aux,columna_aux);
+        if(tipoFicha == "Alfil" || (tipoFicha == "Peon" && fila_aux == (rey_fila+1) && color==0)){
+          return true;
+        }
+        hayFichaEnElCamino=true;
+      }
+      fila_aux++;
+      columna_aux--;
+    }
+    
+     //Arriba derecha
+     var hayFichaEnElCamino = false;
+     var fila_aux = rey_fila + 1;
+     var columna_aux = rey_columna +1 ;
+     while(fila_aux<8 && columna_aux<8 && !hayFichaEnElCamino){
+       var fichaEnCasilla = this.hayFichaEnLaCasilla(fila_aux,columna_aux,color);
+       if(fichaEnCasilla == 1){
+         var tipoFicha = this.getTipoFichaTablero(fila_aux,columna_aux);
+         if(tipoFicha == "Alfil" || (tipoFicha == "Peon" && fila_aux == (rey_fila+1) && color==0)){
+           return true;
+         }
+         hayFichaEnElCamino=true;
+       }
+       fila_aux++;
+       columna_aux++;
+     }
+     
+    //Abajo izquierda
+    var hayFichaEnElCamino = false;
+    var fila_aux = rey_fila - 1;
+    var columna_aux = rey_columna - 1 ;
+    while(fila_aux>=0 && columna_aux >= 0 && !hayFichaEnElCamino){
+      var fichaEnCasilla = this.hayFichaEnLaCasilla(fila_aux,columna_aux,color);
+      if(fichaEnCasilla == 1){
+        var tipoFicha = this.getTipoFichaTablero(fila_aux,columna_aux);
+        if(tipoFicha == "Alfil" || (tipoFicha == "Peon" && fila_aux == (rey_fila-1)&& color==1)){
+          return true;
+        }
+        hayFichaEnElCamino=true;
+      }
+      fila_aux--;
+      columna_aux--;
+    }
+
+    //Abajo derecha
+    var hayFichaEnElCamino = false;
+    var fila_aux = rey_fila - 1;
+    var columna_aux = rey_columna + 1 ;
+    while(fila_aux>=0 && columna_aux<8 && !hayFichaEnElCamino){
+      var fichaEnCasilla = this.hayFichaEnLaCasilla(fila_aux,columna_aux,color);
+      if(fichaEnCasilla == 1){
+        var tipoFicha = this.getTipoFichaTablero(fila_aux,columna_aux);
+        if(tipoFicha == "Alfil" || (tipoFicha == "Peon" && fila_aux == (rey_fila-1) && color==1)){
+          return true;
+        }
+        hayFichaEnElCamino=true;
+      }
+      fila_aux--;
+      columna_aux++;
+    }
+
+    //Comprobamos los movimientos de los caballos
+    if (rey_fila+2 <=7  && rey_columna+1 <=7){
+      var tipoFicha = this.getTipoFichaTablero(rey_fila+2,rey_columna+1);
+      if(this.hayFichaEnLaCasilla(rey_fila+2,rey_columna+1,this.color) == 1 && tipoFicha =="Caballo"){
+          movimientos.add(this.createMovimiento(rey_fila+2,rey_columna+1));
+      }
+    }
+    
+    if (rey_fila+1 <=7  && rey_columna+2 <=7){
+      tipoFicha = this.getTipoFichaTablero(rey_fila+1,rey_columna+2); 
+        if(this.hayFichaEnLaCasilla(rey_fila+1,rey_columna+2,this.color) == 1 && tipoFicha =="Caballo"){
+            movimientos.add(this.createMovimiento(rey_fila+1,rey_columna+2));
+        }
+    }
+    
+    if (rey_fila-1 >=0  && rey_columna+2 <=7){
+      tipoFicha = this.getTipoFichaTablero(rey_fila-1,rey_columna+2);
+        if(this.hayFichaEnLaCasilla(rey_fila-1,rey_columna+2,this.color) == 1 && tipoFicha =="Caballo"){
+            movimientos.add(this.createMovimiento(rey_fila-1,rey_columna+2));
+        }
+    }
+    
+    if (rey_fila-2 >=0  && rey_columna+1 <=7){
+      tipoFicha = this.getTipoFichaTablero(rey_fila-2,rey_columna+1);
+        if(this.hayFichaEnLaCasilla(rey_fila-2,rey_columna+1,this.color) == 1 && tipoFicha =="Caballo"){
+            movimientos.add(this.createMovimiento(rey_fila-2,rey_columna+1));
+        }
+    }
+    
+    if (rey_fila+2 <=7  && rey_columna-1 >=0){
+      tipoFicha = this.getTipoFichaTablero(rey_fila+2,rey_columna-1);
+        if(this.hayFichaEnLaCasilla(rey_fila+2,rey_columna-1,this.color) == 1 && tipoFicha =="Caballo"){
+            movimientos.add(this.createMovimiento(rey_fila+2,rey_columna-1));
+        }
+    }
+    
+    if (rey_fila+1 <=7  && rey_columna-2 >=0){
+      tipoFicha = this.getTipoFichaTablero(rey_fila+1,rey_columna-2);
+        if(this.hayFichaEnLaCasilla(rey_fila+1,rey_columna-2,this.color) == 1 && tipoFicha =="Caballo"){
+            movimientos.add(this.createMovimiento(rey_fila+1,rey_columna-2));
+        }
+    }
+    
+    if (rey_fila-1 >=0  && rey_columna-2 >=0){
+      tipoFicha = this.getTipoFichaTablero(rey_fila-1,rey_columna-2);
+        if(this.hayFichaEnLaCasilla(rey_fila-1,rey_columna-2,this.color) == 1 && tipoFicha =="Caballo"){
+            movimientos.add(this.createMovimiento(rey_fila-1,rey_columna-2));
+        }
+    }
+    
+    if (rey_fila-2 >=0  && rey_columna-1 >=0){
+      tipoFicha = this.getTipoFichaTablero(rey_fila-2,rey_columna-1);
+        if(this.hayFichaEnLaCasilla(rey_fila-2,rey_columna-1,this.color) == 1 && tipoFicha =="Caballo"){
+            movimientos.add(this.createMovimiento(rey_fila-2,rey_columna-1));
+        }
+    }
+    
+    return false;
+    
+
   }
 
   hayFichaEnLaCasilla(fila,columna,color){ //Devuelve 0--> No hay ficha, 1-->Hay ficha enemiga, 2-->Hay ficha aliada

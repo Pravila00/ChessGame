@@ -3,8 +3,8 @@ import * as THREE from '../libs/three.module.js'
 class Ficha extends THREE.Object3D {
   constructor(tablero,color,tipoFicha) {
     super();
-    this.fila = 0;
-    this.columna = 0;
+    this.fila = 5;
+    this.columna = 5;
     this.tablero = tablero;
     this.color = color;
     this.tipoFicha = tipoFicha;
@@ -54,6 +54,8 @@ class Ficha extends THREE.Object3D {
     movimiento.position.set(-22 + columna * 6.3 ,0.1,22 + fila * -6.3)
     return movimiento;
   }
+
+  
 
   getMovimientos(){
     var movimientos = new THREE.Object3D();
