@@ -1,5 +1,6 @@
 import * as THREE from '../libs/three.module.js'
- 
+import { Tablero } from './Tablero.js';
+
 class Ficha extends THREE.Object3D {
   constructor(tablero,color,tipoFicha) {
     super();
@@ -45,14 +46,23 @@ class Ficha extends THREE.Object3D {
   }
 
   createMovimiento(fila,columna){
-    var materialAmarillo = new THREE.MeshPhongMaterial({
-			color: 0xFFFF00,
-			side: THREE.DoubleSide,
-			flatShading: true, //Sombreado plano
-		});
-    var movimiento = new THREE.Mesh(new THREE.BoxGeometry(6.2,0.01,6.2),materialAmarillo);
-    movimiento.position.set(-22 + columna * 6.3 ,0.1,22 + fila * -6.3)
-    return movimiento;
+
+    var tableroaux = { ...this.tablero };
+    
+
+    if (tableroaux.checkJaque(this.color)){
+      console.log("puta");
+    }
+    else{
+      var materialAmarillo = new THREE.MeshPhongMaterial({
+        color: 0xFFFF00,
+        side: THREE.DoubleSide,
+        flatShading: true, //Sombreado plano
+      });
+      var movimiento = new THREE.Mesh(new THREE.BoxGeometry(6.2,0.01,6.2),materialAmarillo);
+      movimiento.position.set(-22 + columna * 6.3 ,0.1,22 + fila * -6.3)
+      return movimiento;
+    }
   }
 
   
@@ -75,6 +85,7 @@ class Ficha extends THREE.Object3D {
   getColor(){
     return this.color;
   }
+
 
   
 }
