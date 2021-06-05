@@ -192,8 +192,11 @@ class Tablero extends THREE.Object3D {
           this.fichaSeleccionada = pickedObjects[0].object.parent;
           if (this.fichaSeleccionada.getColor() === this.turno){
             this.movimientos = this.fichaSeleccionada.getMovimientos();
-            this.add(this.movimientos);
-            this.scene.setApplicationMode('SELECT_FICHA');
+            if (this.movimientos != null){
+                this.add(this.movimientos);
+                this.scene.setApplicationMode('SELECT_FICHA');
+            }
+            
           }
           else{
             this.scene.setApplicationMode('NO_ACTION');
@@ -203,7 +206,8 @@ class Tablero extends THREE.Object3D {
 
       break;
       case 'SELECT_MOVIMIENTO':
-        var pickedObjects = this.raycaster.intersectObjects (this.movimientos.children,true);
+        if (this.movimientos != null){
+            var pickedObjects = this.raycaster.intersectObjects (this.movimientos.children,true);
         if (pickedObjects.length > 0) {
           var movimiento = pickedObjects[0].object;
           var posicion = movimiento.position;
@@ -247,11 +251,16 @@ class Tablero extends THREE.Object3D {
 
           //Comprobamos si hay jaque
           var jaque = this.checkJaque(this.turno,this.convertToString());
-          console.log(jaque);
           if(jaque){
-            $('#jaque_modal').modal('show');
-          }
-
+              if(this.checkMate(this.turno)){
+                  if (this.turno == 0){
+                    $('#mate_negras').modal('show');
+                  }else{
+                    $('#mate_blancas').modal('show');
+                  }
+                 
+              }
+          }        
         }
         else{
           this.fichaSeleccionada = null;
@@ -261,14 +270,24 @@ class Tablero extends THREE.Object3D {
             this.fichaSeleccionada = pickedObjects[0].object.parent;
             if (this.fichaSeleccionada.getColor() === this.turno){
               this.movimientos = this.fichaSeleccionada.getMovimientos();
-              this.add(this.movimientos);
-              this.scene.setApplicationMode('SELECT_FICHA');
+              if (this.movimientos != null){
+                this.add(this.movimientos);
+                this.scene.setApplicationMode('SELECT_FICHA');
+              }
+              else{this.scene.setApplicationMode('NO_ACTION');}
+              
             }
             else{
               this.scene.setApplicationMode('NO_ACTION');
             }
           }
         }
+        }
+        else{
+            this.scene.setApplicationMode('NO_ACTION');
+        }
+            
+        
       break;
 
     }
@@ -277,8 +296,7 @@ class Tablero extends THREE.Object3D {
 
   getTipoFichaTablero(fila,columna){
     var resultado = "";
-    console.log("Fila: " + fila);
-    console.log("Columna: " + columna);
+    
     if(this.casillas[fila][columna] != null){
       resultado = this.casillas[fila][columna].getTipoFicha(); 
     }
@@ -349,7 +367,7 @@ class Tablero extends THREE.Object3D {
       var fichaEnCasilla = this.hayFichaEnLaCasillaChar(rey_fila,i,color,matriz);
       if(fichaEnCasilla == 1){
         var tipoFicha = matriz[rey_fila][i].charAt(0);
-        console.log(rey_fila +"|"+i+"-->"+fichaEnCasilla+", "+tipoFicha);
+        
         if(tipoFicha == "T" || tipoFicha == "D"){
           return true;
         }
@@ -384,7 +402,7 @@ class Tablero extends THREE.Object3D {
       var fichaEnCasilla = this.hayFichaEnLaCasillaChar(fila_aux,columna_aux,color,matriz);
       if(fichaEnCasilla == 1){
         var tipoFicha = matriz[fila_aux][columna_aux].charAt(0);
-        if(tipoFicha == "A" || (tipoFicha == "P" && fila_aux == (rey_fila+1) && color==0)){
+        if(tipoFicha == "A" || (tipoFicha == "P" && fila_aux == (rey_fila+1) && color==0) || tipoFicha == "D"){
           return true;
         }
         hayFichaEnElCamino=true;
@@ -404,7 +422,7 @@ class Tablero extends THREE.Object3D {
        var fichaEnCasilla = this.hayFichaEnLaCasillaChar(fila_aux,columna_aux,color,matriz);
        if(fichaEnCasilla == 1){
          var tipoFicha = matriz[fila_aux][columna_aux].charAt(0);
-         if(tipoFicha == "A" || (tipoFicha == "P" && fila_aux == (rey_fila+1) && color==0)){
+         if(tipoFicha == "A" || (tipoFicha == "P" && fila_aux == (rey_fila+1) && color==0) || tipoFicha == "D"){
            return true;
          }
          hayFichaEnElCamino=true;
@@ -424,7 +442,7 @@ class Tablero extends THREE.Object3D {
       var fichaEnCasilla = this.hayFichaEnLaCasillaChar(fila_aux,columna_aux,color,matriz);
       if(fichaEnCasilla == 1){
         var tipoFicha = matriz[fila_aux][columna_aux].charAt(0);
-        if(tipoFicha == "A" || (tipoFicha == "P" && fila_aux == (rey_fila-1)&& color==1)){
+        if(tipoFicha == "A" || (tipoFicha == "P" && fila_aux == (rey_fila-1)&& color==1) || tipoFicha == "D"){
           return true;
         }
         hayFichaEnElCamino=true;
@@ -444,7 +462,7 @@ class Tablero extends THREE.Object3D {
       var fichaEnCasilla = this.hayFichaEnLaCasillaChar(fila_aux,columna_aux,color,matriz);
       if(fichaEnCasilla == 1){
         var tipoFicha = matriz[fila_aux][columna_aux].charAt(0);
-        if(tipoFicha == "A" || (tipoFicha == "P" && fila_aux == (rey_fila-1) && color==1)){
+        if(tipoFicha == "A" || (tipoFicha == "P" && fila_aux == (rey_fila-1) && color==1) || tipoFicha == "D"){
           return true;
         }
         hayFichaEnElCamino=true;
@@ -517,6 +535,29 @@ class Tablero extends THREE.Object3D {
     
 
   }
+
+    checkMate(){
+        var noHayMovimientos = true;
+        var result = false;
+
+        for (var i = 0 ; i < this.casillas.length && noHayMovimientos ; i++){
+            for (var j = 0 ; j < this.casillas.length && noHayMovimientos ; j++){
+                var ficha = this.casillas[i][j];
+                if (ficha != null && ficha.getColor() == this.turno){
+                    var movimientos = ficha.getMovimientos();
+                    if (movimientos != null){
+                        noHayMovimientos = false;
+                    }
+                }
+            }
+        }
+
+        if (noHayMovimientos){
+            result = true;
+        }
+
+        return result;
+    }
 
   hayFichaEnLaCasilla(fila,columna,color){ //Devuelve 0--> No hay ficha, 1-->Hay ficha enemiga, 2-->Hay ficha aliada
     var result = -1;

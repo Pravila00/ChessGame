@@ -25,15 +25,15 @@
         </div>
     </div>
 
-    <div id="jaque_modal" class="modal" tabindex="-1">
+    <div id="mate_negras" class="modal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Fin de la partida :(</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <p>JAQUE MATE! </p>
+            <div class="modal-body" id="mensajeFin">
+                <p>GANAN LAS NEGRAS! </p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary text-center" onclick="location.reload()" data-bs-dismiss="modal">Finalizar partida</button>
@@ -41,6 +41,43 @@
             </div>
         </div>
     </div>
+
+    <div id="mate_blancas" class="modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Fin de la partida :(</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="mensajeFin">
+                <p>GANAN LAS BLANCAS! </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary text-center" onclick="location.reload()" data-bs-dismiss="modal">Finalizar partida</button>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="rendicion" class="modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Fin de la partida :(</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="mensajeFin">
+                <p>EL JUGADOR SE RINDE</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary text-center" onclick="location.reload()" data-bs-dismiss="modal">Finalizar partida</button>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <button type="button" style ="position:absolute; right:15px; top:70px" id="botonRendirse" class="btn btn-dark">Rendirse</button>
+
     <script>
         $(window).on('load', function() {
             $('#myModal').modal('show');

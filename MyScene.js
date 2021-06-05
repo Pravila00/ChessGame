@@ -280,12 +280,14 @@ class MyScene extends THREE.Scene {
     // Si no existiera esta línea,  update()  se ejecutaría solo la primera vez.
     requestAnimationFrame(() => this.update())
 
+    document.getElementById("botonRendirse").onclick = function() {myFunction()};
 
+    function myFunction() {
+        $('#rendicion').modal('show');
+    }
+        
 
-
-
-
-  }
+    }
 }
 
 /// La función   main

@@ -46,6 +46,7 @@ class Peon extends Ficha {
 
   getMovimientos(){
     var movimientos = new THREE.Object3D();
+    var vacio = true;
 
     //Si es blanco el peon va hacia delante en el tablero
     if(this.color===0){
@@ -55,6 +56,7 @@ class Peon extends Ficha {
                 var mov = this.createMovimiento(this.fila+1,this.columna);
                 if (mov != null){
                     movimientos.add(mov);
+                    vacio = false;
                 }
                 
             }
@@ -64,6 +66,7 @@ class Peon extends Ficha {
                     var mov = this.createMovimiento(this.fila+1,this.columna-1);
                 if (mov != null){
                     movimientos.add(mov);
+                    vacio = false;
                 }
                     
                 }
@@ -73,6 +76,7 @@ class Peon extends Ficha {
                     var mov = this.createMovimiento(this.fila+1,this.columna+1);
                     if (mov != null){
                         movimientos.add(mov);
+                        vacio = false;
                     }
                     
                 }
@@ -83,6 +87,7 @@ class Peon extends Ficha {
                 var mov = this.createMovimiento(this.fila+2,this.columna);
                 if (mov != null){
                     movimientos.add(mov);
+                    vacio = false;
                 }
                 
             }
@@ -95,6 +100,7 @@ class Peon extends Ficha {
                 var mov = this.createMovimiento(this.fila-1,this.columna);
                 if (mov != null){
                     movimientos.add(mov);
+                    vacio = false;
                 }
                 
             }
@@ -104,6 +110,7 @@ class Peon extends Ficha {
                     var mov = this.createMovimiento(this.fila-1,this.columna-1);
                     if (mov != null){
                         movimientos.add(mov);
+                        vacio = false;
                     }
                     
                 }
@@ -113,6 +120,7 @@ class Peon extends Ficha {
                     var mov = this.createMovimiento(this.fila-1,this.columna+1);
                     if (mov != null){
                         movimientos.add(mov);
+                        vacio = false;
                     }
                     
                 }
@@ -123,13 +131,18 @@ class Peon extends Ficha {
                 var mov = this.createMovimiento(this.fila-2,this.columna);
                 if (mov != null){
                     movimientos.add(mov);
+                    vacio = false;
                 }
                 
             }
         }
     }
 
-    return movimientos;
+    if (vacio){
+        return null;
+    }else{
+        return movimientos;
+    }
   }
 
 }

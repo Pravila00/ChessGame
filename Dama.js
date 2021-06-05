@@ -59,6 +59,7 @@ class Dama extends Ficha {
 
   getMovimientos(){
     var movimientos = new THREE.Object3D();
+    var vacio = true;
 
     //Arriba izquierda
     var hayFichaEnElCamino = false;
@@ -72,6 +73,7 @@ class Dama extends Ficha {
           var mov = this.createMovimiento(fila,columna);
           if (mov != null){
             movimientos.add(mov);
+            vacio = false;
           }
         break;
         //Hay ficha enemiga
@@ -79,6 +81,7 @@ class Dama extends Ficha {
           var mov = this.createMovimiento(fila,columna);
           if (mov != null){
             movimientos.add(mov);
+            vacio = false;
           }
           hayFichaEnElCamino=true;
         break;
@@ -103,6 +106,7 @@ class Dama extends Ficha {
           var mov = this.createMovimiento(fila,columna);
           if (mov != null){
             movimientos.add(mov);
+            vacio = false;
           }
         break;
         //Hay ficha enemiga
@@ -110,6 +114,7 @@ class Dama extends Ficha {
           var mov = this.createMovimiento(fila,columna);
           if (mov != null){
             movimientos.add(mov);
+            vacio = false;
           }
           hayFichaEnElCamino=true;
         break;
@@ -134,6 +139,7 @@ class Dama extends Ficha {
           var mov = this.createMovimiento(fila,columna);
           if (mov != null){
             movimientos.add(mov);
+            vacio = false;
           }
         break;
         //Hay ficha enemiga
@@ -141,6 +147,7 @@ class Dama extends Ficha {
           var mov = this.createMovimiento(fila,columna);
           if (mov != null){
             movimientos.add(mov);
+            vacio = false;
           }
           hayFichaEnElCamino=true;
         break;
@@ -165,6 +172,7 @@ class Dama extends Ficha {
           var mov = this.createMovimiento(fila,columna);
           if (mov != null){
             movimientos.add(mov);
+            vacio = false;
           }
         break;
         //Hay ficha enemiga
@@ -172,6 +180,7 @@ class Dama extends Ficha {
           var mov = this.createMovimiento(fila,columna);
           if (mov != null){
             movimientos.add(mov);
+            vacio = false;
           }
           hayFichaEnElCamino=true;
         break;
@@ -194,6 +203,7 @@ class Dama extends Ficha {
           var mov = this.createMovimiento(i,this.columna);
           if (mov != null){
             movimientos.add(mov);
+            vacio = false;
           }
         break;
         //Hay ficha enemiga
@@ -201,6 +211,7 @@ class Dama extends Ficha {
           var mov = this.createMovimiento(i,this.columna);
           if (mov != null){
             movimientos.add(mov);
+            vacio = false;
           }
           hayFichaEnElCamino=true;
         break;
@@ -221,6 +232,7 @@ class Dama extends Ficha {
           var mov = this.createMovimiento(i,this.columna);
           if (mov != null){
             movimientos.add(mov);
+            vacio = false;
           }
         break;
         //Hay ficha enemiga
@@ -228,6 +240,7 @@ class Dama extends Ficha {
           var mov = this.createMovimiento(i,this.columna);
           if (mov != null){
             movimientos.add(mov);
+            vacio = false;
           }
           hayFichaEnElCamino=true;
         break;
@@ -248,6 +261,7 @@ class Dama extends Ficha {
           var mov = this.createMovimiento(this.fila,i);
           if (mov != null){
             movimientos.add(mov);
+            vacio = false;
           }
         break;
         //Hay ficha enemiga
@@ -255,6 +269,7 @@ class Dama extends Ficha {
           var mov = this.createMovimiento(this.fila,i);
           if (mov != null){
             movimientos.add(mov);
+            vacio = false;
           }
           hayFichaEnElCamino=true;
         break;
@@ -275,6 +290,7 @@ class Dama extends Ficha {
           var mov = this.createMovimiento(this.fila,i);
           if (mov != null){
             movimientos.add(mov);
+            vacio = false;
           }
         break;
         //Hay ficha enemiga
@@ -282,6 +298,7 @@ class Dama extends Ficha {
           var mov = this.createMovimiento(this.fila,i);
           if (mov != null){
             movimientos.add(mov);
+            vacio = false;
           }
           hayFichaEnElCamino=true;
         break;
@@ -292,7 +309,11 @@ class Dama extends Ficha {
       }
     }
     
-    return movimientos;
+    if (vacio){
+        return null;
+    }else{
+        return movimientos;
+    }
   }
 
 }

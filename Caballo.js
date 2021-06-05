@@ -74,12 +74,14 @@ class Caballo extends Ficha {
 
   getMovimientos(){
     var movimientos = new THREE.Object3D();
+    var vacio = true;
 
     if (this.fila+2 <=7  && this.columna+1 <=7){
         if(this.tablero.hayFichaEnLaCasilla(this.fila+2,this.columna+1,this.color) !== 2){
             var mov = this.createMovimiento(this.fila+2,this.columna+1);
           if (mov != null){
             movimientos.add(mov);
+            vacio = false;
           }
         }
     }
@@ -88,6 +90,7 @@ class Caballo extends Ficha {
             var mov = this.createMovimiento(this.fila+1,this.columna+2);
             if (mov != null){
                 movimientos.add(mov);
+                vacio = false;
             }
         }
     }
@@ -96,6 +99,7 @@ class Caballo extends Ficha {
             var mov = this.createMovimiento(this.fila-1,this.columna+2);
             if (mov != null){
                 movimientos.add(mov);
+                vacio = false;
             }
         }
     }
@@ -104,6 +108,7 @@ class Caballo extends Ficha {
             var mov = this.createMovimiento(this.fila-2,this.columna+1);
             if (mov != null){
                 movimientos.add(mov);
+                vacio = false;
             }
             
         }
@@ -114,6 +119,7 @@ class Caballo extends Ficha {
             var mov = this.createMovimiento(this.fila+2,this.columna-1);
             if (mov != null){
                 movimientos.add(mov);
+                vacio = false;
             }
             
         }
@@ -123,6 +129,7 @@ class Caballo extends Ficha {
             var mov = this.createMovimiento(this.fila+1,this.columna-2);
             if (mov != null){
                 movimientos.add(mov);
+                vacio = false;
             }
             
         }
@@ -132,6 +139,7 @@ class Caballo extends Ficha {
             var mov = this.createMovimiento(this.fila-1,this.columna-2);
             if (mov != null){
                 movimientos.add(mov);
+                vacio = false;
             }
             
         }
@@ -141,12 +149,17 @@ class Caballo extends Ficha {
             var mov = this.createMovimiento(this.fila-2,this.columna-1);
             if (mov != null){
                 movimientos.add(mov);
+                vacio = false;
             }
             
         }
     }
 
-    return movimientos;
+    if (vacio){
+        return null;
+    }else{
+        return movimientos;
+    }
   }
 
 }

@@ -48,6 +48,8 @@ class Alfil extends Ficha {
   getMovimientos(){
     var movimientos = new THREE.Object3D();
 
+    var vacio = true;
+
     //Arriba izquierda
     var hayFichaEnElCamino = false;
     var fila=this.fila+1;
@@ -60,6 +62,7 @@ class Alfil extends Ficha {
           var mov = this.createMovimiento(fila,columna);
           if (mov != null){
             movimientos.add(mov);
+            vacio = false;
           }
         break;
         //Hay ficha enemiga
@@ -67,6 +70,7 @@ class Alfil extends Ficha {
           var mov = this.createMovimiento(fila,columna);
           if (mov != null){
             movimientos.add(mov);
+            vacio = false;
           }
           hayFichaEnElCamino=true;
         break;
@@ -91,6 +95,7 @@ class Alfil extends Ficha {
           var mov = this.createMovimiento(fila,columna);
           if (mov != null){
             movimientos.add(mov);
+            vacio = false;
           }
         break;
         //Hay ficha enemiga
@@ -98,6 +103,7 @@ class Alfil extends Ficha {
           var mov = this.createMovimiento(fila,columna);
           if (mov != null){
             movimientos.add(mov);
+            vacio = false;
           }
           hayFichaEnElCamino=true;
         break;
@@ -122,6 +128,7 @@ class Alfil extends Ficha {
           var mov = this.createMovimiento(fila,columna);
           if (mov != null){
             movimientos.add(mov);
+            vacio = false;
           }
         break;
         //Hay ficha enemiga
@@ -129,6 +136,7 @@ class Alfil extends Ficha {
           var mov = this.createMovimiento(fila,columna);
           if (mov != null){
             movimientos.add(mov);
+            vacio = false;
           }
           hayFichaEnElCamino=true;
         break;
@@ -153,6 +161,7 @@ class Alfil extends Ficha {
           var mov = this.createMovimiento(fila,columna);
           if (mov != null){
             movimientos.add(mov);
+            vacio = false;
           }
         break;
         //Hay ficha enemiga
@@ -160,6 +169,7 @@ class Alfil extends Ficha {
           var mov = this.createMovimiento(fila,columna);
           if (mov != null){
             movimientos.add(mov);
+            vacio = false;
           }
           hayFichaEnElCamino=true;
         break;
@@ -172,7 +182,12 @@ class Alfil extends Ficha {
       columna++;
     }
     
-    return movimientos;
+    if (vacio){
+        return null;
+    }else{
+        return movimientos;
+    }
+    
   }
 
 }

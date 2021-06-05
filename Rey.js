@@ -69,6 +69,7 @@ class Rey extends Ficha {
 
   getMovimientos(){
     var movimientos = new THREE.Object3D();
+    var vacio = true;
 
     for (var i=-1 ; i<2 ; i++){
         for (var j= -1 ; j<2; j++){
@@ -78,6 +79,7 @@ class Rey extends Ficha {
                         var mov = this.createMovimiento(this.fila+i,this.columna+j);
                         if (mov != null){
                             movimientos.add(mov);
+                            vacio = false;
                         }
                         
                     }
@@ -105,6 +107,7 @@ class Rey extends Ficha {
                     var mov = this.createMovimiento(this.fila,this.columna+2);
                     if (mov != null){
                         movimientos.add(mov);
+                        vacio = false;
                     }
                 }
             }
@@ -126,6 +129,7 @@ class Rey extends Ficha {
                     var mov = this.createMovimiento(this.fila,this.columna-2);
                     if (mov != null){
                         movimientos.add(mov);
+                        vacio = false;
                     }
                     
                 }
@@ -137,7 +141,11 @@ class Rey extends Ficha {
 
     
 
-    return movimientos;
+    if (vacio){
+        return null;
+    }else{
+        return movimientos;
+    }
   }
 
   getHaMovido(){

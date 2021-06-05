@@ -52,9 +52,7 @@ class Ficha extends THREE.Object3D {
     matriz[fila][columna] = matriz[this.fila][this.columna];
     matriz[this.fila][this.columna] = "*2";
     
-
-    console.log(this.fila+"-"+this.columna+" a "+fila+"-"+columna);
-    console.log(matriz);
+    
 
     if(this.tablero.checkJaque(this.color, matriz)){
         return null;

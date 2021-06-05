@@ -51,6 +51,7 @@ class Torre extends Ficha {
 
   getMovimientos(){
     var movimientos = new THREE.Object3D();
+    var vacio = true;
 
     //Recorremos las filas superiores de la torre (Arriba)
     var hayFichaEnElCamino = false;
@@ -62,6 +63,7 @@ class Torre extends Ficha {
           var mov = this.createMovimiento(i,this.columna);
           if (mov != null){
               movimientos.add(mov);
+              vacio = false;
           }
           
         break;
@@ -70,6 +72,7 @@ class Torre extends Ficha {
           var mov = this.createMovimiento(i,this.columna);
           if (mov != null){
               movimientos.add(mov);
+              vacio = false;
           }
           
           hayFichaEnElCamino=true;
@@ -91,6 +94,7 @@ class Torre extends Ficha {
           var mov =this.createMovimiento(i,this.columna);
           if (mov != null){
               movimientos.add(mov);
+              vacio = false;
           }
           
         break;
@@ -99,6 +103,7 @@ class Torre extends Ficha {
           var mov = this.createMovimiento(i,this.columna);
           if (mov != null){
               movimientos.add(mov);
+              vacio = false;
           }
           
           hayFichaEnElCamino=true;
@@ -120,6 +125,7 @@ class Torre extends Ficha {
           var mov = this.createMovimiento(this.fila,i);
           if (mov != null){
               movimientos.add(mov);
+              vacio = false;
           }
           
         break;
@@ -128,6 +134,7 @@ class Torre extends Ficha {
           var mov = this.createMovimiento(this.fila,i);
           if (mov != null){
               movimientos.add(mov);
+              vacio = false;
           }
           
           hayFichaEnElCamino=true;
@@ -149,6 +156,7 @@ class Torre extends Ficha {
           var mov = this.createMovimiento(this.fila,i);
           if (mov != null){
               movimientos.add(mov);
+              vacio = false;
           }
           
         break;
@@ -157,6 +165,7 @@ class Torre extends Ficha {
           var mov = this.createMovimiento(this.fila,i);
           if (mov != null){
               movimientos.add(mov);
+              vacio = false;
           }
           
           hayFichaEnElCamino=true;
@@ -168,7 +177,11 @@ class Torre extends Ficha {
       }
     }
  
-    return movimientos;
+    if (vacio){
+        return null;
+    }else{
+        return movimientos;
+    }
   }
 
   
