@@ -77,43 +77,72 @@ class Caballo extends Ficha {
 
     if (this.fila+2 <=7  && this.columna+1 <=7){
         if(this.tablero.hayFichaEnLaCasilla(this.fila+2,this.columna+1,this.color) !== 2){
-            movimientos.add(this.createMovimiento(this.fila+2,this.columna+1));
+            var mov = this.createMovimiento(this.fila+2,this.columna+1);
+          if (mov != null){
+            movimientos.add(mov);
+          }
         }
     }
     if (this.fila+1 <=7  && this.columna+2 <=7){
         if(this.tablero.hayFichaEnLaCasilla(this.fila+1,this.columna+2,this.color) !== 2){
-            movimientos.add(this.createMovimiento(this.fila+1,this.columna+2));
+            var mov = this.createMovimiento(this.fila+1,this.columna+2);
+            if (mov != null){
+                movimientos.add(mov);
+            }
         }
     }
     if (this.fila-1 >=0  && this.columna+2 <=7){
         if(this.tablero.hayFichaEnLaCasilla(this.fila-1,this.columna+2,this.color) !== 2){
-            movimientos.add(this.createMovimiento(this.fila-1,this.columna+2));
+            var mov = this.createMovimiento(this.fila-1,this.columna+2);
+            if (mov != null){
+                movimientos.add(mov);
+            }
         }
     }
     if (this.fila-2 >=0  && this.columna+1 <=7){
         if(this.tablero.hayFichaEnLaCasilla(this.fila-2,this.columna+1,this.color) !== 2){
-            movimientos.add(this.createMovimiento(this.fila-2,this.columna+1));
+            var mov = this.createMovimiento(this.fila-2,this.columna+1);
+            if (mov != null){
+                movimientos.add(mov);
+            }
+            
         }
     }
 
     if (this.fila+2 <=7  && this.columna-1 >=0){
         if(this.tablero.hayFichaEnLaCasilla(this.fila+2,this.columna-1,this.color) !== 2){
-            movimientos.add(this.createMovimiento(this.fila+2,this.columna-1));
+            var mov = this.createMovimiento(this.fila+2,this.columna-1);
+            if (mov != null){
+                movimientos.add(mov);
+            }
+            
         }
     }
     if (this.fila+1 <=7  && this.columna-2 >=0){
         if(this.tablero.hayFichaEnLaCasilla(this.fila+1,this.columna-2,this.color) !== 2){
-            movimientos.add(this.createMovimiento(this.fila+1,this.columna-2));
+            var mov = this.createMovimiento(this.fila+1,this.columna-2);
+            if (mov != null){
+                movimientos.add(mov);
+            }
+            
         }
     }
     if (this.fila-1 >=0  && this.columna-2 >=0){
         if(this.tablero.hayFichaEnLaCasilla(this.fila-1,this.columna-2,this.color) !== 2){
-            movimientos.add(this.createMovimiento(this.fila-1,this.columna-2));
+            var mov = this.createMovimiento(this.fila-1,this.columna-2);
+            if (mov != null){
+                movimientos.add(mov);
+            }
+            
         }
     }
     if (this.fila-2 >=0  && this.columna-1 >=0){
         if(this.tablero.hayFichaEnLaCasilla(this.fila-2,this.columna-1,this.color) !== 2){
-            movimientos.add(this.createMovimiento(this.fila-2,this.columna-1));
+            var mov = this.createMovimiento(this.fila-2,this.columna-1);
+            if (mov != null){
+                movimientos.add(mov);
+            }
+            
         }
     }
 

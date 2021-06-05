@@ -57,11 +57,17 @@ class Alfil extends Ficha {
       switch(fichaEnCasilla){
         //No hay ficha
         case 0:
-          movimientos.add(this.createMovimiento(fila,columna));
+          var mov = this.createMovimiento(fila,columna);
+          if (mov != null){
+            movimientos.add(mov);
+          }
         break;
         //Hay ficha enemiga
         case 1:
-          movimientos.add(this.createMovimiento(fila,columna));
+          var mov = this.createMovimiento(fila,columna);
+          if (mov != null){
+            movimientos.add(mov);
+          }
           hayFichaEnElCamino=true;
         break;
         //Hay ficha aliada
@@ -82,11 +88,17 @@ class Alfil extends Ficha {
       switch(fichaEnCasilla){
         //No hay ficha
         case 0:
-          movimientos.add(this.createMovimiento(fila,columna));
+          var mov = this.createMovimiento(fila,columna);
+          if (mov != null){
+            movimientos.add(mov);
+          }
         break;
         //Hay ficha enemiga
         case 1:
-          movimientos.add(this.createMovimiento(fila,columna));
+          var mov = this.createMovimiento(fila,columna);
+          if (mov != null){
+            movimientos.add(mov);
+          }
           hayFichaEnElCamino=true;
         break;
         //Hay ficha aliada
@@ -107,11 +119,17 @@ class Alfil extends Ficha {
       switch(fichaEnCasilla){
         //No hay ficha
         case 0:
-          movimientos.add(this.createMovimiento(fila,columna));
+          var mov = this.createMovimiento(fila,columna);
+          if (mov != null){
+            movimientos.add(mov);
+          }
         break;
         //Hay ficha enemiga
         case 1:
-          movimientos.add(this.createMovimiento(fila,columna));
+          var mov = this.createMovimiento(fila,columna);
+          if (mov != null){
+            movimientos.add(mov);
+          }
           hayFichaEnElCamino=true;
         break;
         //Hay ficha aliada
@@ -132,11 +150,17 @@ class Alfil extends Ficha {
       switch(fichaEnCasilla){
         //No hay ficha
         case 0:
-          movimientos.add(this.createMovimiento(fila,columna));
+          var mov = this.createMovimiento(fila,columna);
+          if (mov != null){
+            movimientos.add(mov);
+          }
         break;
         //Hay ficha enemiga
         case 1:
-          movimientos.add(this.createMovimiento(fila,columna));
+          var mov = this.createMovimiento(fila,columna);
+          if (mov != null){
+            movimientos.add(mov);
+          }
           hayFichaEnElCamino=true;
         break;
         //Hay ficha aliada

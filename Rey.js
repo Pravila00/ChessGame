@@ -75,7 +75,11 @@ class Rey extends Ficha {
             if (i !== 0 || j!==0){
                 if (this.fila+i <= 7 && this.fila+i >=0 && this.columna+j <=7 && this.columna+j >=0){
                     if(this.tablero.hayFichaEnLaCasilla(this.fila+i,this.columna+j,this.color) !== 2){
-                        movimientos.add(this.createMovimiento(this.fila+i,this.columna+j));
+                        var mov = this.createMovimiento(this.fila+i,this.columna+j);
+                        if (mov != null){
+                            movimientos.add(mov);
+                        }
+                        
                     }
                 }
             }
@@ -97,7 +101,11 @@ class Rey extends Ficha {
                     }
                 }
                 if (posible){
-                    movimientos.add(this.createMovimiento(this.fila,this.columna+2));
+                    
+                    var mov = this.createMovimiento(this.fila,this.columna+2);
+                    if (mov != null){
+                        movimientos.add(mov);
+                    }
                 }
             }
         }
@@ -115,7 +123,11 @@ class Rey extends Ficha {
                     }
                 }
                 if (posible){
-                    movimientos.add(this.createMovimiento(this.fila,this.columna-2));
+                    var mov = this.createMovimiento(this.fila,this.columna-2);
+                    if (mov != null){
+                        movimientos.add(mov);
+                    }
+                    
                 }
             }
         }

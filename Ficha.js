@@ -47,11 +47,17 @@ class Ficha extends THREE.Object3D {
 
   createMovimiento(fila,columna){
 
-    var tableroaux = { ...this.tablero };
+    var matriz = this.tablero.convertToString();
+
+    matriz[fila][columna] = matriz[this.fila][this.columna];
+    matriz[this.fila][this.columna] = "*2";
     
 
-    if (tableroaux.checkJaque(this.color)){
-      console.log("puta");
+    console.log(this.fila+"-"+this.columna+" a "+fila+"-"+columna);
+    console.log(matriz);
+
+    if(this.tablero.checkJaque(this.color, matriz)){
+        return null;
     }
     else{
       var materialAmarillo = new THREE.MeshPhongMaterial({
@@ -60,9 +66,11 @@ class Ficha extends THREE.Object3D {
         flatShading: true, //Sombreado plano
       });
       var movimiento = new THREE.Mesh(new THREE.BoxGeometry(6.2,0.01,6.2),materialAmarillo);
-      movimiento.position.set(-22 + columna * 6.3 ,0.1,22 + fila * -6.3)
+      movimiento.position.set(-22 + columna * 6.3 ,0.1,22 + fila * -6.3);
+
       return movimiento;
     }
+    
   }
 
   
