@@ -14,9 +14,12 @@ class MyScene extends THREE.Scene {
 
     this.applicationMode = 'NO_ACTION';  
 
+    this.tiempo = new THREE.Vector2(0,1);
+    this.tiempoAnterior = Date.now();
+
     this.cameraX = 0;
     this.cameraZ = 100;
-    this.velocidadGiro=1;
+    this.velocidadGiro=120;
     
     // Lo primero, crear el visualizador, pasándole el lienzo sobre el que realizar los renderizados.
     this.renderer = this.createRenderer(myCanvas);
@@ -232,48 +235,81 @@ class MyScene extends THREE.Scene {
     this.renderer.render (this, this.getCamera());
 
 
+
+    var tiempoActual = Date.now();
+    var segundos = (tiempoActual - this.tiempoAnterior)/1000;
+    var vel = segundos * this.velocidadGiro;
+
+
     if (this.tablero.getTurno() === 0){
-        this.cameraZ += this.velocidadGiro;
-
+        var rotacionZ = this.cameraZ + vel;
+        var rotacionX = 0;
+        
         if(this.empiezaGiro)
-            this.cameraX += this.velocidadGiro;
+            rotacionX = this.cameraX + vel;
         else
-            this.cameraX -= this.velocidadGiro;
+            rotacionX = this.cameraX - vel;
 
-        this.camera.position.set (this.cameraX, 75, this.cameraZ);
-        if (this.cameraZ >= 75){
+        if (rotacionZ >= 75){
             this.cameraZ = 75;
         }
-        if (this.cameraX >= 75){
+        else{
+            this.cameraZ = rotacionZ;
+        }
+
+        if (rotacionX >= 75){
             this.cameraX = 75;
             this.empiezaGiro = false;
         }
-        if (this.cameraX <= 0){
+        else{
+            this.cameraX = rotacionX;
+        }
+
+        if (rotacionX <= 0){
             this.cameraX = 0;
         }
+        else{
+            this.cameraX = rotacionX;
+        }
+
+        this.camera.position.set (this.cameraX, 75, this.cameraZ);    
     }
     else{
-        this.cameraZ -= this.velocidadGiro;
+        var rotacionZ = this.cameraZ - vel;
+        var rotacionX = 0;
 
         if(!this.empiezaGiro)
-            this.cameraX += this.velocidadGiro;
+            rotacionX = this.cameraX + vel;
         else
-            this.cameraX -= this.velocidadGiro;
+            rotacionX = this.cameraX - vel;
 
-        this.camera.position.set (this.cameraX, 75, this.cameraZ);
-        if (this.cameraZ <= -75){
+        if (rotacionZ <= -75){
             this.cameraZ = -75;
         }
-        if (this.cameraX <= -75){
+        else{
+            this.cameraZ = rotacionZ;
+        }
+
+        if (rotacionX <= -75){
             this.cameraX = -75;
             this.empiezaGiro = false;
         }
-        if (this.cameraX >= 0){
+        else{
+            this.cameraX = rotacionX;
+        }
+
+        if (rotacionX >= 0){
             this.cameraX = 0;
         }
+        else{
+            this.cameraX = rotacionX;
+        }
+
+        this.camera.position.set (this.cameraX, 75, this.cameraZ);        
 
     }
 
+    this.tiempoAnterior = tiempoActual;
 
     // Este método debe ser llamado cada vez que queramos visualizar la escena de nuevo.
     // Literalmente le decimos al navegador: "La próxima vez que haya que refrescar la pantalla, llama al método que te indico".
