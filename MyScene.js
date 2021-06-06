@@ -21,7 +21,7 @@ class MyScene extends THREE.Scene {
     // Lo primero, crear el visualizador, pasándole el lienzo sobre el que realizar los renderizados.
     this.renderer = this.createRenderer(myCanvas);
     
-    this.gui = this.createGUI ();
+    //this.gui = this.createGUI ();
 
     this.trackballControls = null;
     
@@ -72,7 +72,7 @@ class MyScene extends THREE.Scene {
     // La escena le va a añadir sus propios controles. 
     // Se definen mediante una   new function()
     // En este caso la intensidad de la luz y si se muestran o no los ejes
-    this.guiControls = new function() {
+    /*this.guiControls = new function() {
       // En el contexto de una función   this   alude a la función
       this.lightIntensity = 0.5;
       this.axisOnOff = true;
@@ -85,7 +85,7 @@ class MyScene extends THREE.Scene {
     folder.add (this.guiControls, 'lightIntensity', 0, 1, 0.1).name('Intensidad de la Luz : ');
     
     // Y otro para mostrar u ocultar los ejes
-    folder.add (this.guiControls, 'axisOnOff').name ('Mostrar ejes : ');
+    folder.add (this.guiControls, 'axisOnOff').name ('Mostrar ejes : ');*/
     
     return gui;
   }
@@ -103,7 +103,7 @@ class MyScene extends THREE.Scene {
     // La luz focal, además tiene una posición, y un punto de mira
     // Si no se le da punto de mira, apuntará al (0,0,0) en coordenadas del mundo
     // En este caso se declara como   this.atributo   para que sea un atributo accesible desde otros métodos.
-    this.spotLight = new THREE.SpotLight( 0xffffff, this.guiControls.lightIntensity );
+    this.spotLight = new THREE.SpotLight( 0xffffff, 0.5 );
     this.spotLight.position.set( 0, 200, 0 );
     this.add (this.spotLight);
   }
@@ -218,7 +218,7 @@ class MyScene extends THREE.Scene {
   update () {
     // Se actualizan los elementos de la escena para cada frame
     // Se actualiza la intensidad de la luz con lo que haya indicado el usuario en la gui
-    this.spotLight.intensity = this.guiControls.lightIntensity;
+    //this.spotLight.intensity = this.guiControls.lightIntensity;
     
     // Se muestran o no los ejes según lo que idique la GUI
     
