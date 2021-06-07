@@ -251,16 +251,20 @@ class Tablero extends THREE.Object3D {
 
           //Comprobamos si hay jaque
           var jaque = this.checkJaque(this.turno,this.convertToString());
-          if(jaque){
+          
               if(this.checkMate(this.turno)){
+                if(jaque){
                   if (this.turno == 0){
                     $('#mate_negras').modal('show');
                   }else{
                     $('#mate_blancas').modal('show');
                   }
-                 
+                }
+                else{
+                    $('#ahogado').modal('show');
+                }
               }
-          }        
+                
         }
         else{
           this.fichaSeleccionada = null;
