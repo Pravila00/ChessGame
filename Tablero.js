@@ -638,35 +638,6 @@ class Tablero extends THREE.Object3D {
     return casillas_string;
   }
 
-
-
-  
-  createGUI (gui,titleGui) {
-    // Controles para el tamaño, la orientación y la posición de la caja
-    this.guiControls = new function () {
-      this.sizeX = 1.0;
-      this.sizeY = 1.0;
-      this.sizeZ = 1.0;
-      
-      this.posX = 0.0;
-      this.posY = 0.0;
-      this.posZ = 0.0;
-      
-      // Un botón para dejarlo todo en su posición inicial
-      // Cuando se pulse se ejecutará esta función.
-      this.reset = function () {
-        this.sizeX = 1.0;
-        this.sizeY = 1.0;
-        this.sizeZ = 1.0;
-        
-        this.posX = 0.0;
-        this.posY = 0.0;
-        this.posZ = 0.0;
-      }
-    } 
-    
-  }
-
   update () {
     for(var i=0;i<8;i++){
       for(var j=0;j<8;j++){

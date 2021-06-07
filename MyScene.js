@@ -67,32 +67,6 @@ class MyScene extends THREE.Scene {
     this.add (this.camera);
   }
   
-  
-  createGUI () {
-    // Se crea la interfaz gráfica de usuario
-    var gui = new GUI();
-    
-    // La escena le va a añadir sus propios controles. 
-    // Se definen mediante una   new function()
-    // En este caso la intensidad de la luz y si se muestran o no los ejes
-    /*this.guiControls = new function() {
-      // En el contexto de una función   this   alude a la función
-      this.lightIntensity = 0.5;
-      this.axisOnOff = true;
-    }
-
-    // Se crea una sección para los controles de esta clase
-    var folder = gui.addFolder ('Luz y Ejes');
-    
-    // Se le añade un control para la intensidad de la luz
-    folder.add (this.guiControls, 'lightIntensity', 0, 1, 0.1).name('Intensidad de la Luz : ');
-    
-    // Y otro para mostrar u ocultar los ejes
-    folder.add (this.guiControls, 'axisOnOff').name ('Mostrar ejes : ');*/
-    
-    return gui;
-  }
-  
   createLights () {
     // Se crea una luz ambiental, evita que se vean complentamente negras las zonas donde no incide de manera directa una fuente de luz
     // La luz ambiental solo tiene un color y una intensidad
@@ -172,10 +146,6 @@ class MyScene extends THREE.Scene {
     } else {
       this.applicationMode = 'NO_ACTION';
     }
-  }
-
-  mostrarPosiblesCasillasPosiblesCasillas(event, action){
-    this.tablero.mostrarPosiblesCasillas(event,action);
   }
 
   moverFichaRaton(event,action){
