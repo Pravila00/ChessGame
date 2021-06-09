@@ -4,15 +4,12 @@ class Peon extends Ficha {
   constructor(tablero,color,fila,columna) {
     super(tablero,color,"Peon");
     
-    // Puntos
+    // Puntos para crear el perfil del peon
     this.points = [];
     this.points.push (new THREE.Vector2 (0, 0, 0));
     this.points.push (new THREE.Vector2 (2, 0, 0));
     this.points.push (new THREE.Vector2 (2, 0.5, 0));
     this.points.push (new THREE.Vector2 (1.1, 0.5, 0));
-
-    
-    //this.points.push (new THREE.Vector2 (1, 1.8, 0));
 
     this.points.push (new THREE.Vector2 (0.75, 2.1, 0));
 
@@ -31,6 +28,7 @@ class Peon extends Ficha {
     
     var revolGeom = new THREE.LatheGeometry( this.points, 16, 0, 2*Math.PI );
 
+    //Se establece el color del peon (material)
     if (color === 0){
       var revolMat = new THREE.MeshPhongMaterial({color: 0xffffff});
     }
@@ -38,12 +36,13 @@ class Peon extends Ficha {
       var revolMat = new THREE.MeshPhongMaterial({color: 0x2D2C2C});
     }
 
-    // Para crear una línea visible, como en el vídeo
+    //Se crea el mesh con la geometria y el material
     this.revol = new THREE.Mesh(revolGeom, revolMat); 
     this.add (this.revol);
 
   }
 
+  //Devuelve un Object3D con los movimientos amarillos
   getMovimientos(){
     var movimientos = new THREE.Object3D();
     var vacio = true;

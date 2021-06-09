@@ -39,12 +39,13 @@ class Alfil extends Ficha {
     }
 
     
-    // Para crear una línea visible, como en el vídeo
+    //Se crea el mesh con la geometria y el material
     this.revol = new THREE.Mesh(revolGeom, revolMat); 
     this.add (this.revol);
 
   }
 
+  //Devuelve un Object3D con los movimientos amarillos
   getMovimientos(){
     var movimientos = new THREE.Object3D();
 

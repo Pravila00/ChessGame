@@ -35,10 +35,7 @@ class Caballo extends Ficha {
     boca.rotateZ(Math.PI/4);
     boca.scale(4,0.3,1);
     boca.rotateZ(-Math.PI/40);
-    boca.translate(7,5,0);
-
-    
-    
+    boca.translate(7,5,0); 
 
     var baseBSP = new ThreeBSP(base);
     var cuerpoBSP = new ThreeBSP(cuerpo);
@@ -58,13 +55,14 @@ class Caballo extends Ficha {
     var aux4 = aux3.union(crestaF);
     var aux5 = aux4.subtract(bocaBSP);
 
+    //Se establece el material
     if (color === 0){
-    var mat = new THREE.MeshPhongMaterial({color: 0xffffff});
-    this.rotation.y=Math.PI/2;
+        var mat = new THREE.MeshPhongMaterial({color: 0xffffff});
+        this.rotation.y=Math.PI/2;
     }
     else{
-    var mat = new THREE.MeshPhongMaterial({color: 0x2D2C2C});
-    this.rotation.y=-Math.PI/2;;
+        var mat = new THREE.MeshPhongMaterial({color: 0x2D2C2C});
+        this.rotation.y=-Math.PI/2;
     }
 
     var caballo = aux5.toMesh(mat);
@@ -72,6 +70,7 @@ class Caballo extends Ficha {
 
   }
 
+  //Devuelve un Object3D con los movimientos amarillos
   getMovimientos(){
     var movimientos = new THREE.Object3D();
     var vacio = true;
@@ -154,7 +153,7 @@ class Caballo extends Ficha {
             
         }
     }
-
+    
     if (vacio){
         return null;
     }else{

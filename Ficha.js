@@ -46,13 +46,10 @@ class Ficha extends THREE.Object3D {
   }
 
   createMovimiento(fila,columna){
-
     var matriz = this.tablero.convertToString();
 
     matriz[fila][columna] = matriz[this.fila][this.columna];
     matriz[this.fila][this.columna] = "*2";
-    
-    
 
     if(this.tablero.checkJaque(this.color, matriz)){
         return null;

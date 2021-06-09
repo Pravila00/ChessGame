@@ -65,32 +65,7 @@ class Tablero extends THREE.Object3D {
 
   }
 
-//   createFichas(){
-//       for (var i=0 ; i<8 ; i++){
-//         this.moverFicha(new Peon(this,1),6,i);
-//         this.moverFicha(new Peon(this,0),1,i);
-//       }
-
-//       this.moverFicha(new Torre(this,1),7,0);
-//       this.moverFicha(new Caballo(this,1),7,1);
-//       this.moverFicha(new Alfil(this,1),7,2);
-//       this.moverFicha(new Dama(this,1),7,3);
-//       this.moverFicha(new Rey(this,1),7,4);
-//       this.moverFicha(new Alfil(this,1),7,5);
-//       this.moverFicha(new Caballo(this,1),7,6);
-//        this.moverFicha(new Torre(this,1),7,7);
-
-//       this.moverFicha(new Torre(this,0),0,0);
-//       this.moverFicha(new Caballo(this,0),0,1);
-//       this.moverFicha(new Alfil(this,0),0,2);
-//       this.moverFicha(new Dama(this,0),0,3);
-//       this.moverFicha(new Rey(this,0),0,4);
-//       this.moverFicha(new Alfil(this,0),0,5);
-//       this.moverFicha(new Caballo(this,0),0,6);
-//       this.moverFicha(new Torre(this,0),0,7);
-
-//   }
-
+  //El parametro con valor 1 es el color negro de la ficha
   createFichasNegras(){
     //Creamos las fichas
     var peones=[];
@@ -120,6 +95,7 @@ class Tablero extends THREE.Object3D {
     }
   }
 
+  //El parametro con valor 0 es el color blanco de la ficha
   createFichasBlancas(){
     //Creamos las fichas
     var peones=[];
@@ -150,6 +126,8 @@ class Tablero extends THREE.Object3D {
     }
   }
 
+  //Actualiza la matriz de casillas 
+  //Cambia la fila y la columna a la ficha
   moverFicha(ficha,nuevaFila,nuevaColumna){
     if(ficha.isPeon() && ((nuevaFila===0 && ficha.getColor()===1) || (nuevaFila===7 && ficha.getColor()===0))){
       //El peon se transforma en dama
@@ -209,17 +187,28 @@ class Tablero extends THREE.Object3D {
         if (this.movimientos != null){
             var pickedObjects = this.raycaster.intersectObjects (this.movimientos.children,true);
         if (pickedObjects.length > 0) {
+          //Movimiento seleccionado con el raton
           var movimiento = pickedObjects[0].object;
+          
+          //Se obtienen las coordenadas 3D del movimiento
           var posicion = movimiento.position;
+
+          //Obtiene la nueva fila y la nueva columna con las coordenadas 3D
           var fila = Math.round(this.fichaSeleccionada.getFilaConPosicion(posicion));
           var columna = Math.round(this.fichaSeleccionada.getColumnaConPosicion(posicion));
+
+          //La casilla donde estaba la ficha pasa a estar vacia
           this.casillas[this.fichaSeleccionada.getFila()][this.fichaSeleccionada.getColumna()] = null;
+
           //Si hay una ficha en la casilla a la que vamos la matamos
           if(this.casillas[fila][columna] !== null){
             this.fichas.remove(this.casillas[fila][columna]);
           }
-          this.casillas[fila][columna] = this.fichaSeleccionada;
 
+          //Actualiza la matriz de casillas
+          this.casillas[fila][columna] = this.fichaSeleccionada;
+          
+          //Gestion del enroque
           if(this.fichaSeleccionada.getTipoFicha().localeCompare("Rey") == 0){
             if (!this.fichaSeleccionada.getHaMovido()){
                 if (columna ==  6){
@@ -231,11 +220,16 @@ class Tablero extends THREE.Object3D {
             }
           }
           
+          //Mueve la ficha a la nueva posicion
           this.moverFicha(this.fichaSeleccionada,fila,columna);
 
+          //Borramos los movimientos del Object3D
           this.remove(this.movimientos);
+
+          //El estado de la aplicación pasa a NO_ACTION
           this.scene.setApplicationMode('NO_ACTION');
-          //Cambia de turno
+
+          //Cambia de turno porque ya ha realizado un movimiento
           this.turno===0?this.turno=1:this.turno=0;
 
           this.scene.setInicioCambio();
@@ -252,20 +246,22 @@ class Tablero extends THREE.Object3D {
           //Comprobamos si hay jaque
           var jaque = this.checkJaque(this.turno,this.convertToString());
           
-              if(this.checkMate(this.turno)){
-                if(jaque){
-                  if (this.turno == 0){
-                    $('#mate_negras').modal('show');
-                  }else{
-                    $('#mate_blancas').modal('show');
-                  }
-                }
-                else{
-                    $('#ahogado').modal('show');
-                }
+          //Si se ha producido un mate la partida acaba bien se gana, se pierde o se empata (ahogado)
+          if(this.checkMate(this.turno)){
+            if(jaque){
+              if (this.turno == 0){
+                $('#mate_negras').modal('show');
+              }else{
+                $('#mate_blancas').modal('show');
               }
+            }
+            else{
+                $('#ahogado').modal('show');
+            }
+          }
                 
         }
+        //En el caso de que no se seleccione ningun movimiento se puede volver a seleccionar una ficha
         else{
           this.fichaSeleccionada = null;
           this.remove(this.movimientos);
@@ -298,6 +294,7 @@ class Tablero extends THREE.Object3D {
     
   }
 
+  //Devuelve el nombre de la ficha en string (Torre, Peon, etc)
   getTipoFichaTablero(fila,columna){
     var resultado = "";
     
@@ -307,6 +304,7 @@ class Tablero extends THREE.Object3D {
     return resultado;
   }
 
+  //Devuelve la ficha Rey de un color determinado
   getRey(color){
     var rey;
 
@@ -319,8 +317,10 @@ class Tablero extends THREE.Object3D {
     return rey;
   }
 
+  //Funcion que comprueba si hay un JAQUE
   checkJaque(color, matriz){
 
+    //Primero obtenemos el rey para saber cual es su fila y su columna
     for (var i=0 ; i<8 ; i++){
       for(var j=0 ; j<8 ; j++){
         if (matriz[i][j].charAt(0) === "R"){
@@ -540,30 +540,36 @@ class Tablero extends THREE.Object3D {
 
   }
 
-    checkMate(){
-        var noHayMovimientos = true;
-        var result = false;
+  //Comprueba si hay un mate 
+  //Para ello no puede haber posibles movimientos (recordemos que si un movimiento genera jaque NO SE CREA)
+  
+  checkMate(){
+      var noHayMovimientos = true;
+      var result = false;
 
-        for (var i = 0 ; i < this.casillas.length && noHayMovimientos ; i++){
-            for (var j = 0 ; j < this.casillas.length && noHayMovimientos ; j++){
-                var ficha = this.casillas[i][j];
-                if (ficha != null && ficha.getColor() == this.turno){
-                    var movimientos = ficha.getMovimientos();
-                    if (movimientos != null){
-                        noHayMovimientos = false;
-                    }
-                }
-            }
-        }
+      for (var i = 0 ; i < this.casillas.length && noHayMovimientos ; i++){
+          for (var j = 0 ; j < this.casillas.length && noHayMovimientos ; j++){
+              var ficha = this.casillas[i][j];
+              if (ficha != null && ficha.getColor() == this.turno){
+                  var movimientos = ficha.getMovimientos();
+                  if (movimientos != null){
+                      noHayMovimientos = false;
+                  }
+              }
+          }
+      }
 
-        if (noHayMovimientos){
-            result = true;
-        }
+      //Si no hay ningun movimiento hay un MATE
+      if (noHayMovimientos){
+          result = true;
+      }
 
-        return result;
-    }
+      return result;
+  }
 
-  hayFichaEnLaCasilla(fila,columna,color){ //Devuelve 0--> No hay ficha, 1-->Hay ficha enemiga, 2-->Hay ficha aliada
+  //Comprueba si hay una ficha en una casilla 
+  //Devuelve 0--> No hay ficha, 1-->Hay ficha enemiga, 2-->Hay ficha aliada
+  hayFichaEnLaCasilla(fila,columna,color){ 
     var result = -1;
     var casilla = this.casillas[fila][columna];
     if (casilla !== null){
@@ -580,6 +586,7 @@ class Tablero extends THREE.Object3D {
     return result;
   }
 
+  //Comprueba si hay una ficha en una casilla usando casillas en version char (mas eficiente para comprobar los jaques)
   hayFichaEnLaCasillaChar(fila,columna,color,matriz){ //Devuelve 0--> No hay ficha, 1-->Hay ficha enemiga, 2-->Hay ficha aliada
     var result = -1;
     var casilla = matriz[fila][columna];
@@ -597,10 +604,6 @@ class Tablero extends THREE.Object3D {
     return result;
   }
 
-  getPosiblesMovimientos(ficha){
-    return ficha.getPosiblesMovimientos();
-  }
-
   getFicha(event){
     var mouse = this.getMouse (event);
     this.raycaster.setFromCamera (mouse, this.scene.getCamera());
@@ -613,10 +616,13 @@ class Tablero extends THREE.Object3D {
 
   }
 
+  //Devuelve el turno actual
   getTurno(){
     return this.turno;
   }
 
+  //A traves de casillas (matriz de fichas) devuele una matriz con la misma informacion
+  //pero en lugar de variables tipo Ficha, devuelve tipos Char
   convertToString(){
     var casillas_string=[
       [null,null,null,null,null,null,null,null],
@@ -642,6 +648,7 @@ class Tablero extends THREE.Object3D {
     return casillas_string;
   }
 
+  //Actualiza la posicion de las fichas en casillas
   update () {
     for(var i=0;i<8;i++){
       for(var j=0;j<8;j++){

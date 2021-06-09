@@ -44,14 +44,14 @@ class Rey extends Ficha {
     var aux = cruz1BSP.union(cruz2BSP);
     var aux2 = aux.union(revolGeomBSP);
     
-
+    //Se establece el material
     if (color === 0){
       var mat = new THREE.MeshPhongMaterial({color: 0xffffff});
     }
     else{
       var mat = new THREE.MeshPhongMaterial({color: 0x2D2C2C});
     }
-    // Para crear una línea visible, como en el vídeo
+    
 
     this.rey = aux2.toMesh(mat);
 
@@ -67,6 +67,7 @@ class Rey extends Ficha {
         this.haMovido = true;
   }
 
+  //Devuelve un Object3D con los movimientos amarillos
   getMovimientos(){
     var movimientos = new THREE.Object3D();
     var vacio = true;
