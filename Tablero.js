@@ -168,6 +168,7 @@ class Tablero extends THREE.Object3D {
         var pickedObjects = this.raycaster.intersectObjects (this.fichas.children,true);
         if (pickedObjects.length > 0) {
           this.fichaSeleccionada = pickedObjects[0].object.parent;
+          console.log(this.fichaSeleccionada);
           if (this.fichaSeleccionada.getColor() === this.turno){
             this.movimientos = this.fichaSeleccionada.getMovimientos();
             if (this.movimientos != null){
