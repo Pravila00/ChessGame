@@ -51,16 +51,21 @@ class Ficha extends THREE.Object3D {
     matriz[fila][columna] = matriz[this.fila][this.columna];
     matriz[this.fila][this.columna] = "*2";
 
+    //Si el movimiento produce Jaque no se crea
     if(this.tablero.checkJaque(this.color, matriz)){
         return null;
     }
     else{
+      //Se crea el objeto movimiento (un box con material amarillo)
       var materialAmarillo = new THREE.MeshPhongMaterial({
         color: 0xFFFF00,
         side: THREE.DoubleSide,
         flatShading: true, //Sombreado plano
       });
+      //Se crea el Mesh
       var movimiento = new THREE.Mesh(new THREE.BoxGeometry(6.2,0.01,6.2),materialAmarillo);
+
+      //Se coloca el movimiento en la posicion determinada
       movimiento.position.set(-22 + columna * 6.3 ,0.1,22 + fila * -6.3);
 
       return movimiento;

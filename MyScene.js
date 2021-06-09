@@ -189,12 +189,7 @@ class MyScene extends THREE.Scene {
   }
 
   update () {
-    // Se actualizan los elementos de la escena para cada frame
-    // Se actualiza la intensidad de la luz con lo que haya indicado el usuario en la gui
-    //this.spotLight.intensity = this.guiControls.lightIntensity;
-    
-    // Se muestran o no los ejes según lo que idique la GUI
-    
+
     // Se actualiza la posición de la cámara según su controlador
     this.trackballControls.update();
     
@@ -204,8 +199,7 @@ class MyScene extends THREE.Scene {
     // Le decimos al renderizador "visualiza la escena que te indico usando la cámara que te estoy pasando"
     this.renderer.render (this, this.getCamera());
 
-
-
+    //La velocidad de la camara usa e = v * t
     var tiempoActual = Date.now();
     var segundos = (tiempoActual - this.tiempoAnterior)/1000;
     var vel = segundos * this.velocidadGiro;
@@ -286,9 +280,9 @@ class MyScene extends THREE.Scene {
     // Si no existiera esta línea,  update()  se ejecutaría solo la primera vez.
     requestAnimationFrame(() => this.update())
 
-    document.getElementById("botonRendirse").onclick = function() {myFunction()};
+    document.getElementById("botonRendirse").onclick = function() {rendirse()};
 
-    function myFunction() {
+    function rendirse() {
         $('#rendicion').modal('show');
     }
         
