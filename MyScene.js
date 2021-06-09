@@ -14,12 +14,15 @@ class MyScene extends THREE.Scene {
 
     this.applicationMode = 'NO_ACTION';  
 
-    this.tiempo = new THREE.Vector2(0,1);
+    //Se inicializa el tiempoAnterior para calcular el movimiento de la camara
     this.tiempoAnterior = Date.now();
 
+    //Posicion inicial de la camara
     this.cameraX = 0;
     this.cameraZ = 100;
-    this.velocidadGiro=120;
+
+    //Velocidad de la camara
+    this.velocidadGiro=300;
     
     // Lo primero, crear el visualizador, pasándole el lienzo sobre el que realizar los renderizados.
     this.renderer = this.createRenderer(myCanvas);
@@ -199,81 +202,92 @@ class MyScene extends THREE.Scene {
     // Le decimos al renderizador "visualiza la escena que te indico usando la cámara que te estoy pasando"
     this.renderer.render (this, this.getCamera());
 
+    /*****************************************************/
+    //MOVIMIENTO DE LA CAMARA
+
     //La velocidad de la camara usa e = v * t
     var tiempoActual = Date.now();
     var segundos = (tiempoActual - this.tiempoAnterior)/1000;
-    var vel = segundos * this.velocidadGiro;
+    var espacio = segundos * this.velocidadGiro;
 
-
+    //Si el turno es de las fichas blancas
     if (this.tablero.getTurno() === 0){
-        var rotacionZ = this.cameraZ + vel;
-        var rotacionX = 0;
+        var movimientoZ = this.cameraZ + espacio;
+        var movimientoX = 0;
         
-        if(this.empiezaGiro)
-            rotacionX = this.cameraX + vel;
-        else
-            rotacionX = this.cameraX - vel;
-
-        if (rotacionZ >= 75){
-            this.cameraZ = 75;
-        }
+        //Se calcula la rotacion en X
+        if(this.empiezaGiro){
+          movimientoX = this.cameraX + espacio;
+        }     
         else{
-            this.cameraZ = rotacionZ;
+          movimientoX = this.cameraX - espacio;
         }
+            
 
-        if (rotacionX >= 75){
+        //Se comprueba que la rotacion X no pase de 75
+        this.cameraX = movimientoX;
+        if (this.cameraX >= 75){
             this.cameraX = 75;
             this.empiezaGiro = false;
         }
-        else{
-            this.cameraX = rotacionX;
+
+        //Se comprueba que la rotacion Z no pase de 75
+        this.cameraZ = movimientoZ;
+        if (this.cameraZ >= 75){
+            this.cameraZ = 75;
         }
 
-        if (rotacionX <= 0){
-            this.cameraX = 0;
-        }
-        else{
-            this.cameraX = rotacionX;
+        //Se comprueba que la rotacion X no pase por debajo de 0º
+        this.cameraX = movimientoX;
+        if(this.cameraX <= 0){
+          this.cameraX = 0;
         }
 
+        //Asignacion de las coordenadas de la camara
         this.camera.position.set (this.cameraX, 75, this.cameraZ);    
     }
+    //Si el turno es de las fichas negras
     else{
-        var rotacionZ = this.cameraZ - vel;
-        var rotacionX = 0;
+        var movimientoZ = this.cameraZ - espacio;
+        var movimientoX = 0;
 
+        //Se calcula la rotacion de X teniendo en cuenta si esta en el primer recorrido
+        //o en el segundo del giro de la camara
         if(!this.empiezaGiro)
-            rotacionX = this.cameraX + vel;
+            movimientoX = this.cameraX + espacio;
         else
-            rotacionX = this.cameraX - vel;
+            movimientoX = this.cameraX - espacio;
 
-        if (rotacionZ <= -75){
-            this.cameraZ = -75;
-        }
-        else{
-            this.cameraZ = rotacionZ;
-        }
-
-        if (rotacionX <= -75){
+        if (movimientoX <= -75){
             this.cameraX = -75;
             this.empiezaGiro = false;
         }
         else{
-            this.cameraX = rotacionX;
+            this.cameraX = movimientoX;
         }
 
-        if (rotacionX >= 0){
+        //Se comprueba que la rotacion X no pase por debajo de -75º
+        this.cameraZ = movimientoZ;
+        if (movimientoZ <= -75){
+          this.cameraZ = -75;
+        }
+
+        //Se comprueba que la rotacion X no pase por encima de 0º
+        this.cameraX = movimientoX;
+        if (movimientoX >= 0){
             this.cameraX = 0;
         }
-        else{
-            this.cameraX = rotacionX;
-        }
 
+        //Asignacion de las coordenadas de la camara
         this.camera.position.set (this.cameraX, 75, this.cameraZ);        
 
     }
 
+    //Actualizamos el tiempo anterior
     this.tiempoAnterior = tiempoActual;
+    /*****************************************************/
+
+
 
     // Este método debe ser llamado cada vez que queramos visualizar la escena de nuevo.
     // Literalmente le decimos al navegador: "La próxima vez que haya que refrescar la pantalla, llama al método que te indico".

@@ -75,9 +75,7 @@ class Ficha extends THREE.Object3D {
 
   
 
-  getMovimientos(){
-    
-  }
+  getMovimientos(){}
 
   getColor(){
     return this.color;
